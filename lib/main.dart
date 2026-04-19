@@ -18,7 +18,7 @@ class Voya extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-      home: SafeArea(child: const PassengerMainScreen()),
+      home: SafeArea(child: const AppRoot()),
     );
   }
 }

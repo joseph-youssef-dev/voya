@@ -1,7 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:voya/features/passenger/auth/presentation/widgets/auth_text_field.dart';
 import 'package:voya/features/passenger/auth/presentation/screens/passenger_register_screen.dart';
+import 'package:voya/features/passenger/auth/data/api/login_api_service.dart';
+import 'package:voya/features/passenger/auth/logic/cubit/login_cubit.dart';
+import 'package:voya/features/passenger/auth/logic/cubit/login_state.dart';
+import 'package:voya/core/databases/api/dio_consumer.dart';
+import 'package:voya/features/passenger/passenger_main_screen.dart';
 
 class PassengerLoginScreen extends StatefulWidget {
   const PassengerLoginScreen({super.key});
@@ -12,11 +19,22 @@ class PassengerLoginScreen extends StatefulWidget {
 
 class _PassengerLoginScreenState extends State<PassengerLoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEBEFF5),
+    return BlocProvider(
+      create: (context) => LoginCubit(apiService: LoginApiService(api: DioConsumer(dio: Dio()))),
+      child: Scaffold(
+        backgroundColor: const Color(0xFFEBEFF5),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
@@ -62,43 +80,80 @@ class _PassengerLoginScreenState extends State<PassengerLoginScreen> {
                       const SizedBox(height: 40),
                       
                       // Fields
-                      const AuthTextField(
+                      AuthTextField(
                         label: "EMAIL ADDRESS",
                         hint: "john@architect.com",
                         prefixIcon: Icons.email,
+                        controller: _emailController,
                       ),
                       const SizedBox(height: 20),
-                      const AuthTextField(
+                      AuthTextField(
                         label: "PASSWORD",
                         hint: "Enter your password",
                         prefixIcon: Icons.lock,
                         isPassword: true,
+                        controller: _passwordController,
                       ),
                       const SizedBox(height: 30),
                       
                       // Log In Button
-                      ElevatedButton(
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // Perform login
+                      BlocConsumer<LoginCubit, LoginState>(
+                        listener: (context, state) {
+                          if (state is LoginSuccess) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.message), backgroundColor: Colors.green),
+                            );
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const PassengerMainScreen(),
+                              ),
+                            );
+                          } else if (state is LoginFailure) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
+                            );
                           }
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0D32B3),
-                          foregroundColor: Colors.white,
-                          minimumSize: const Size(double.infinity, 56),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          "Log In",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
+                        builder: (context, state) {
+                          return ElevatedButton(
+                            onPressed: state is LoginLoading
+                                ? null
+                                : () {
+                                    if (_formKey.currentState!.validate()) {
+                                      context.read<LoginCubit>().loginUser(
+                                        email: _emailController.text.trim(),
+                                        password: _passwordController.text,
+                                      );
+                                    }
+                                  },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF0D32B3),
+                              foregroundColor: Colors.white,
+                              minimumSize: const Size(double.infinity, 56),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              elevation: 0,
+                            ),
+                            child: state is LoginLoading
+                                ? const SizedBox(
+                                    height: 24,
+                                    width: 24,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2.5,
+                                    ),
+                                  )
+                                : const Text(
+                                    "Log In",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                          );
+                        },
                       ),
                       
                       const SizedBox(height: 30),
@@ -139,6 +194,7 @@ class _PassengerLoginScreenState extends State<PassengerLoginScreen> {
               ),
             ],
           ),
+        ),
         ),
       ),
     );

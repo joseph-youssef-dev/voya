@@ -6,6 +6,8 @@ class AuthTextField extends StatefulWidget {
   final IconData prefixIcon;
   final bool isPassword;
   final TextEditingController? controller;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   const AuthTextField({
     super.key,
@@ -14,6 +16,8 @@ class AuthTextField extends StatefulWidget {
     required this.prefixIcon,
     this.isPassword = false,
     this.controller,
+    this.readOnly = false,
+    this.onTap,
   });
 
   @override
@@ -47,6 +51,8 @@ class _AuthTextFieldState extends State<AuthTextField> {
         TextFormField(
           controller: widget.controller,
           obscureText: _obscureText,
+          readOnly: widget.readOnly,
+          onTap: widget.onTap,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
               return 'This field cannot be empty';
