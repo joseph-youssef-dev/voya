@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:voya/features/passenger/home/logic/cubit/home_cubit.dart';
+import 'package:voya/features/passenger/home/logic/cubit/home_state.dart';
 
 class SectionHeader extends StatelessWidget {
   const SectionHeader({super.key});
@@ -10,10 +13,10 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 "Available Journeys",
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
@@ -21,36 +24,26 @@ class SectionHeader extends StatelessWidget {
                   color: Color(0xFF000000),
                 ),
               ),
-              SizedBox(height: 4),
-              Text(
-                "Found 12 trips matching your profile",
-                style: TextStyle(
-                  color: Color(0xFF6B7280),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
+              const SizedBox(height: 4),
+              BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  int count = 0;
+                  if (state is HomeSuccess) {
+                    count = state.trips.length;
+                  }
+                  return Text(
+                    "Found $count trips matching your profile",
+                    style: const TextStyle(
+                      color: Color(0xFF6B7280),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  );
+                },
               ),
             ],
           ),
           const Spacer(),
-          ElevatedButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.tune, size: 16),
-            label: const Text(
-              "Filters",
-              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEBF1FF),
-              foregroundColor: const Color(0xFF0D32B3),
-              elevation: 0,
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-              minimumSize: Size.zero,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
         ],
       ),
     );

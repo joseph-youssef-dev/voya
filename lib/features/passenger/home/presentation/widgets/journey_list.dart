@@ -1,60 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voya/features/passenger/home/presentation/widgets/journey_card.dart';
+import 'package:voya/features/passenger/home/logic/cubit/home_cubit.dart';
+import 'package:voya/features/passenger/home/logic/cubit/home_state.dart';
 
 class JourneyList extends StatelessWidget {
-  final int itemCount;
-
-  const JourneyList({super.key, this.itemCount = 5});
+  const JourneyList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Mock list of template cards to cycle through
-    final List<Map<String, dynamic>> mockData = [
-      {
-        "name": "Alex Chen",
-        "rating": "4.9",
-        "trips": "128",
-        "pickup": "Downtown Arts District",
-        "destination": "International Airport (T3)",
-        "price": "\$32.00",
-        "time": "14:30",
-        "day": "Today",
-        "avatarUrl": "https://i.pravatar.cc/150?img=11",
-        "isBookable": true,
-      },
-      {
-        "name": "Sarah Miller",
-        "rating": "5.0",
-        "trips": "42",
-        "pickup": "North Campus Plaza",
-        "destination": "Waterfront Tech Hub",
-        "price": "\$18.50",
-        "time": "08:15",
-        "day": "Tomorrow",
-        "avatarUrl": "https://i.pravatar.cc/150?img=5",
-        "isBookable": false,
-      },
-    ];
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        if (state is HomeLoading) {
+          return const Center(child: CircularProgressIndicator(color: Color(0xFF0D32B3)));
+        } else if (state is HomeFailure) {
+          return Center(
+            child: Text(
+              state.errorMessage, 
+              style: const TextStyle(color: Colors.red),
+              textAlign: TextAlign.center,
+            ),
+          );
+        } else if (state is HomeSuccess) {
+          final trips = state.trips;
+          
+          if (trips.isEmpty) {
+            return const Center(
+              child: Text(
+                "No trips available", 
+                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)
+              ),
+            );
+          }
 
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      itemCount: itemCount,
-      separatorBuilder: (context, index) => const SizedBox(height: 20),
-      itemBuilder: (context, index) {
-        final data = mockData[index % mockData.length];
-        
-        return JourneyCard(
-          name: data["name"],
-          rating: data["rating"],
-          trips: data["trips"],
-          pickup: data["pickup"],
-          destination: data["destination"],
-          price: data["price"],
-          time: data["time"],
-          day: data["day"],
-          avatarUrl: data["avatarUrl"],
-          isBookable: data["isBookable"],
-        );
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            itemCount: trips.length,
+            separatorBuilder: (context, index) => const SizedBox(height: 20),
+            itemBuilder: (context, index) {
+              final trip = trips[index];
+              
+              String formattedTime = "00:00";
+              String formattedDay = "Unknown";
+              try {
+                final date = DateTime.parse(trip.startDate);
+                formattedTime = "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+                
+                final now = DateTime.now();
+                if (date.year == now.year && date.month == now.month && date.day == now.day) {
+                  formattedDay = "Today";
+                } else if (date.year == now.year && date.month == now.month && date.day == now.day + 1) {
+                  formattedDay = "Tomorrow";
+                } else {
+                  formattedDay = "${date.day}/${date.month}/${date.year}";
+                }
+              } catch (_) {}
+
+              return JourneyCard(
+                name: trip.driverName.replaceAll(RegExp(r'\\'), '').trim(),
+                rating: "4.8",
+                trips: trip.availableSeats.toString(),
+                pickup: trip.fromCity,
+                destination: trip.toCity,
+                price: "\$${trip.pricePerSet.toStringAsFixed(2)}",
+                time: formattedTime,
+                day: formattedDay,
+                avatarUrl: "https://i.pravatar.cc/150?u=${trip.id}", 
+                isBookable: trip.availableSeats > 0,
+              );
+            },
+          );
+        }
+
+        return const SizedBox.shrink();
       },
     );
   }

@@ -10,47 +10,24 @@ class HeaderWidget extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(2),
+            width: 44,
+            height: 44,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: const Color(0xFF0D32B3), width: 2),
-            ),
-            child: const CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage("https://i.pravatar.cc/150"),
+              color: Colors.grey.shade200,
             ),
           ),
           const SizedBox(width: 12),
           const Text(
-            "Hello, Alexander",
+            "voya",
             style: TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 18,
-              color: Color(0xFF05113A),
+              fontWeight: FontWeight.w900,
+              fontSize: 26,
+              color: Color(0xFF0D32B3),
+              letterSpacing: 1.0,
             ),
           ),
           const Spacer(),
-          Stack(
-            children: [
-              const Icon(
-                Icons.notifications,
-                color: Color(0xFF0D32B3),
-                size: 28,
-              ),
-              Positioned(
-                right: 2,
-                top: 2,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
