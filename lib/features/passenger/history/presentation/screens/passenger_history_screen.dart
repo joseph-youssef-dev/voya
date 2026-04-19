@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:voya/core/constants/app_colors.dart';
-import 'package:voya/features/passenger/home/presentation/widgets/journey_card.dart';
+import 'package:voya/core/databases/api/dio_consumer.dart';
+import 'package:voya/features/passenger/history/data/api/history_api_service.dart';
+import 'package:voya/features/passenger/history/data/models/my_trip_model.dart';
+import 'package:voya/features/passenger/history/logic/cubit/history_cubit.dart';
+import 'package:voya/features/passenger/history/logic/cubit/history_state.dart';
 
 class PassengerHistoryScreen extends StatelessWidget {
   const PassengerHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
+    return BlocProvider(
+      create: (context) => HistoryCubit(
+        apiService: HistoryApiService(api: DioConsumer(dio: Dio())),
+      )..fetchMyTrips(),
       child: SafeArea(
         child: Column(
           children: [
             const Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Row(
                 children: [
                   Text(
@@ -27,46 +35,56 @@ class PassengerHistoryScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.04),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: TabBar(
-                dividerColor: Colors.transparent,
-                indicator: BoxDecoration(
-                  color: AppColors.primaryColor,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                indicatorSize: TabBarIndicatorSize.tab,
-                labelColor: Colors.white,
-                unselectedLabelColor: AppColors.textSecondaryColor,
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 14,
-                ),
-                tabs: const [
-                  Tab(text: "Success"),
-                  Tab(text: "Pending"),
-                  Tab(text: "Failed"),
-                ],
-              ),
-            ),
             Expanded(
-              child: TabBarView(
-                children: [
-                  _buildTripsList(context, tripType: "success"),
-                  _buildTripsList(context, tripType: "pending"),
-                  _buildTripsList(context, tripType: "failed"),
-                ],
+              child: BlocBuilder<HistoryCubit, HistoryState>(
+                builder: (context, state) {
+                  if (state is HistoryLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(color: Color(0xFF0D32B3)),
+                    );
+                  } else if (state is HistoryFailure) {
+                    return Center(
+                      child: Text(
+                        state.errorMessage,
+                        style: const TextStyle(color: Colors.red),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  } else if (state is HistorySuccess) {
+                    final trips = state.trips;
+
+                    if (trips.isEmpty) {
+                      return const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.receipt_long_outlined, size: 64, color: Color(0xFFCBD5E1)),
+                            SizedBox(height: 16),
+                            Text(
+                              "No trips yet",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xFF94A3B8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ListView.separated(
+                      padding: const EdgeInsets.all(20),
+                      itemCount: trips.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 16),
+                      itemBuilder: (context, index) {
+                        return _MyTripCard(trip: trips[index]);
+                      },
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],
@@ -74,27 +92,152 @@ class PassengerHistoryScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildTripsList(BuildContext context, {required String tripType}) {
-    int itemCount = tripType == 'success' ? 4 : (tripType == 'pending' ? 1 : 2);
-    return ListView.separated(
+class _MyTripCard extends StatelessWidget {
+  final MyTripModel trip;
+
+  const _MyTripCard({required this.trip});
+
+  @override
+  Widget build(BuildContext context) {
+    String formattedTime = "";
+    String formattedDate = "";
+    try {
+      final date = DateTime.parse(trip.startDate);
+      formattedTime =
+          "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+      formattedDate = "${date.day}/${date.month}/${date.year}";
+    } catch (_) {}
+
+    return Container(
       padding: const EdgeInsets.all(20),
-      itemCount: itemCount,
-      separatorBuilder: (context, index) => const SizedBox(height: 20),
-      itemBuilder: (context, index) {
-        return JourneyCard(
-          name: "Ahmed Mohamed",
-          rating: "4.8",
-          trips: "120",
-          pickup: "Cairo, Nasr City",
-          destination: "Alexandria, Smouha",
-          price: "EGP 250",
-          time: "08:30 AM",
-          day: "Mon, 12 Oct",
-          isBookable: false,
-          avatarUrl: 'https://i.pravatar.cc/150?img=${index + 10 + (tripType == "pending" ? 5 : 0)}',
-        );
-      },
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Column(
+                children: [
+                  const SizedBox(height: 4),
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: const Color(0xFF0D32B3), width: 2.5),
+                    ),
+                  ),
+                  Container(width: 2, height: 36, color: const Color(0xFFF0F0F0)),
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF0D32B3),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "FROM",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.0,
+                        color: Color(0xFF5A5A5A),
+                      ),
+                    ),
+                    Text(
+                      trip.fromCity,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1E1E1E),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "TO",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1.0,
+                        color: Color(0xFF5A5A5A),
+                      ),
+                    ),
+                    Text(
+                      trip.toCity,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1E1E1E),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "\$${trip.pricePerSet.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF0D32B3),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(color: Color(0xFFF0F0F0), height: 1),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              const Icon(Icons.person_outline, size: 16, color: Color(0xFF9E9E9E)),
+              const SizedBox(width: 6),
+              Text(
+                trip.driverName.replaceAll(RegExp(r'\\'), '').trim(),
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF5A5A5A),
+                ),
+              ),
+              const Spacer(),
+              const Icon(Icons.access_time, size: 16, color: Color(0xFF9E9E9E)),
+              const SizedBox(width: 4),
+              Text(
+                "$formattedTime  •  $formattedDate",
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF5A5A5A),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
