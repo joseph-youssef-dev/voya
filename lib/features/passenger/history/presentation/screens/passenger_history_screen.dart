@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:voya/core/constants/app_colors.dart';
 import 'package:voya/core/databases/api/dio_consumer.dart';
+import 'package:voya/core/shared/voya_app_bar.dart';
 import 'package:voya/features/passenger/history/data/api/history_api_service.dart';
 import 'package:voya/features/passenger/history/data/models/my_trip_model.dart';
 import 'package:voya/features/passenger/history/logic/cubit/history_cubit.dart';
@@ -17,77 +17,61 @@ class PassengerHistoryScreen extends StatelessWidget {
       create: (context) => HistoryCubit(
         apiService: HistoryApiService(api: DioConsumer(dio: Dio())),
       )..fetchMyTrips(),
-      child: SafeArea(
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              child: Row(
-                children: [
-                  Text(
-                    "My Trips",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textPrimaryColor,
-                    ),
+      child: Scaffold(
+        appBar: const VoyaAppBar(title: "My Trips"),
+        body: BlocBuilder<HistoryCubit, HistoryState>(
+          builder: (context, state) {
+            if (state is HistoryLoading) {
+              return const Center(
+                child: CircularProgressIndicator(color: Color(0xFF0D32B3)),
+              );
+            } else if (state is HistoryFailure) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Text(
+                    state.errorMessage,
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
                   ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: BlocBuilder<HistoryCubit, HistoryState>(
-                builder: (context, state) {
-                  if (state is HistoryLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(color: Color(0xFF0D32B3)),
-                    );
-                  } else if (state is HistoryFailure) {
-                    return Center(
-                      child: Text(
-                        state.errorMessage,
-                        style: const TextStyle(color: Colors.red),
-                        textAlign: TextAlign.center,
-                      ),
-                    );
-                  } else if (state is HistorySuccess) {
-                    final trips = state.trips;
+                ),
+              );
+            } else if (state is HistorySuccess) {
+              final trips = state.trips;
 
-                    if (trips.isEmpty) {
-                      return const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.receipt_long_outlined, size: 64, color: Color(0xFFCBD5E1)),
-                            SizedBox(height: 16),
-                            Text(
-                              "No trips yet",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF94A3B8),
-                              ),
-                            ),
-                          ],
+              if (trips.isEmpty) {
+                return const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.receipt_long_outlined,
+                          size: 64, color: Color(0xFFCBD5E1)),
+                      SizedBox(height: 16),
+                      Text(
+                        "No trips yet",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF94A3B8),
                         ),
-                      );
-                    }
+                      ),
+                    ],
+                  ),
+                );
+              }
 
-                    return ListView.separated(
-                      padding: const EdgeInsets.all(20),
-                      itemCount: trips.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 16),
-                      itemBuilder: (context, index) {
-                        return _MyTripCard(trip: trips[index]);
-                      },
-                    );
-                  }
-
-                  return const SizedBox.shrink();
+              return ListView.separated(
+                padding: const EdgeInsets.all(20),
+                itemCount: trips.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 16),
+                itemBuilder: (context, index) {
+                  return _MyTripCard(trip: trips[index]);
                 },
-              ),
-            ),
-          ],
+              );
+            }
+
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
@@ -136,10 +120,12 @@ class _MyTripCard extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFF0D32B3), width: 2.5),
+                      border: Border.all(
+                          color: const Color(0xFF0D32B3), width: 2.5),
                     ),
                   ),
-                  Container(width: 2, height: 36, color: const Color(0xFFF0F0F0)),
+                  Container(
+                      width: 2, height: 36, color: const Color(0xFFF0F0F0)),
                   Container(
                     width: 10,
                     height: 10,
@@ -213,7 +199,8 @@ class _MyTripCard extends StatelessWidget {
           const SizedBox(height: 14),
           Row(
             children: [
-              const Icon(Icons.person_outline, size: 16, color: Color(0xFF9E9E9E)),
+              const Icon(Icons.person_outline,
+                  size: 16, color: Color(0xFF9E9E9E)),
               const SizedBox(width: 6),
               Text(
                 trip.driverName.replaceAll(RegExp(r'\\'), '').trim(),
@@ -224,10 +211,11 @@ class _MyTripCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              const Icon(Icons.access_time, size: 16, color: Color(0xFF9E9E9E)),
+              const Icon(Icons.access_time,
+                  size: 16, color: Color(0xFF9E9E9E)),
               const SizedBox(width: 4),
               Text(
-                "$formattedTime  •  $formattedDate",
+                "$formattedTime  ·  $formattedDate",
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,

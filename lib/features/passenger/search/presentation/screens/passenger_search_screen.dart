@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voya/core/constants/app_colors.dart';
+import 'package:voya/core/shared/voya_app_bar.dart';
 import 'package:voya/features/passenger/home/presentation/widgets/journey_list.dart';
 
 class PassengerSearchScreen extends StatefulWidget {
@@ -25,10 +26,10 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
+    return Scaffold(
+      appBar: const VoyaAppBar(title: "Search"),
+      body: Column(
         children: [
-          // Search Form Section
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -50,105 +51,91 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                const Text(
-                  "Search Journey",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimaryColor,
+                  _buildInputField(
+                    controller: _fromController,
+                    icon: Icons.my_location,
+                    hint: "From (e.g. Cairo)",
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter departure location";
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                const SizedBox(height: 20),
-                _buildInputField(
-                  controller: _fromController,
-                  icon: Icons.my_location,
-                  hint: "From (e.g. Cairo)",
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Please enter departure location";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildInputField(
-                  controller: _toController,
-                  icon: Icons.location_on,
-                  hint: "To (e.g. Alexandria)",
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Please enter destination";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildInputField(
-                  controller: _dateController,
-                  icon: Icons.calendar_today,
-                  hint: "Date (e.g. 15 Oct)",
-                  readOnly: true,
-                  onTap: () async {
-                    final DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2030),
-                      builder: (context, child) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: const ColorScheme.light(
-                              primary: AppColors.primaryColor,
-                              onPrimary: Colors.white,
-                              onSurface: AppColors.textPrimaryColor,
+                  const SizedBox(height: 12),
+                  _buildInputField(
+                    controller: _toController,
+                    icon: Icons.location_on,
+                    hint: "To (e.g. Alexandria)",
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter destination";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInputField(
+                    controller: _dateController,
+                    icon: Icons.calendar_today,
+                    hint: "Date (e.g. 15 Oct)",
+                    readOnly: true,
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2030),
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: const ColorScheme.light(
+                                primary: AppColors.primaryColor,
+                                onPrimary: Colors.white,
+                                onSurface: AppColors.textPrimaryColor,
+                              ),
                             ),
-                          ),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if (picked != null) {
-                      setState(() {
-                        // basic formatting
-                        _dateController.text = "${picked.day}/${picked.month}/${picked.year}";
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Form is valid, perform search
+                            child: child!,
+                          );
+                        },
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          _dateController.text =
+                              "${picked.day}/${picked.month}/${picked.year}";
+                        });
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {}
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      "Search",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                      child: const Text(
+                        "Search",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             ),
           ),
-
           const SizedBox(height: 20),
-
-          // Results Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -167,7 +154,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "Found 5 trips matching your search",
+                      "All available trips",
                       style: TextStyle(
                         color: Color(0xFF6B7280),
                         fontSize: 13,
@@ -179,13 +166,12 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                 const Spacer(),
                 PopupMenuButton<String>(
                   color: const Color(0xFFEBF1FF),
-                  onSelected: (value) {
-                    // TODO: Apply filter based on 'value'
-                  },
+                  onSelected: (value) {},
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
                     const PopupMenuItem<String>(
                       value: 'highest',
                       child: Text('Highest Price'),
@@ -196,7 +182,8 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                     ),
                   ],
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 8),
                     decoration: BoxDecoration(
                       color: const Color(0xFFEBF1FF),
                       borderRadius: BorderRadius.circular(10),
@@ -221,13 +208,8 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
               ],
             ),
           ),
-
           const SizedBox(height: 15),
-
-          // Results List
-          const Expanded(
-            child: JourneyList(),
-          ),
+          const Expanded(child: JourneyList()),
         ],
       ),
     );

@@ -39,33 +39,18 @@ class JourneyList extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox(height: 20),
             itemBuilder: (context, index) {
               final trip = trips[index];
-              
-              String formattedTime = "00:00";
-              String formattedDay = "Unknown";
-              try {
-                final date = DateTime.parse(trip.startDate);
-                formattedTime = "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
-                
-                final now = DateTime.now();
-                if (date.year == now.year && date.month == now.month && date.day == now.day) {
-                  formattedDay = "Today";
-                } else if (date.year == now.year && date.month == now.month && date.day == now.day + 1) {
-                  formattedDay = "Tomorrow";
-                } else {
-                  formattedDay = "${date.day}/${date.month}/${date.year}";
-                }
-              } catch (_) {}
 
               return JourneyCard(
-                name: trip.driverName.replaceAll(RegExp(r'\\'), '').trim(),
-                rating: "4.8",
-                trips: trip.availableSeats.toString(),
-                pickup: trip.fromCity,
-                destination: trip.toCity,
-                price: "\$${trip.pricePerSet.toStringAsFixed(2)}",
-                time: formattedTime,
-                day: formattedDay,
-                avatarUrl: "https://i.pravatar.cc/150?u=${trip.id}", 
+                driverName: trip.driverName,
+                fromCity: trip.fromCity,
+                toCity: trip.toCity,
+                startDate: trip.startDate,
+                pricePerSet: trip.pricePerSet,
+                vehicleModel: trip.vehicleModel,
+                distance: trip.distance,
+                duration: trip.duration,
+                availableSeats: trip.availableSeats,
+                features: trip.features,
                 isBookable: trip.availableSeats > 0,
               );
             },
