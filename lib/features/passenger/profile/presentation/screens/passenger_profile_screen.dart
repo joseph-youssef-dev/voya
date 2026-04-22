@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:voya/core/databases/api/dio_consumer.dart';
+import 'package:voya/core/shared/custom_header.dart';
 import 'package:voya/features/passenger/profile/data/api/profile_api_service.dart';
 import 'package:voya/features/passenger/profile/logic/cubit/profile_cubit.dart';
 import 'package:voya/features/passenger/profile/logic/cubit/profile_state.dart';
@@ -22,6 +23,7 @@ class PassengerProfileScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              CustomHeader(title: 'Profile'),
               const SizedBox(height: 45),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),

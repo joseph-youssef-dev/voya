@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voya/core/constants/app_colors.dart';
+import 'package:voya/core/shared/custom_header.dart';
 import 'package:voya/features/passenger/home/presentation/widgets/journey_list.dart';
 
 class PassengerSearchScreen extends StatefulWidget {
@@ -28,6 +29,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
     return SafeArea(
       child: Column(
         children: [
+          CustomHeader(title: 'Search Journey'),
           // Search Form Section
           Container(
             padding: const EdgeInsets.all(20),
@@ -42,7 +44,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                   color: Colors.black.withOpacity(0.04),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
-                )
+                ),
               ],
             ),
             child: Form(
@@ -50,99 +52,100 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                const Text(
-                  "Search Journey",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w900,
-                    color: AppColors.textPrimaryColor,
+                  const Text(
+                    "Search Journey",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.textPrimaryColor,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                _buildInputField(
-                  controller: _fromController,
-                  icon: Icons.my_location,
-                  hint: "From (e.g. Cairo)",
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Please enter departure location";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildInputField(
-                  controller: _toController,
-                  icon: Icons.location_on,
-                  hint: "To (e.g. Alexandria)",
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return "Please enter destination";
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-                _buildInputField(
-                  controller: _dateController,
-                  icon: Icons.calendar_today,
-                  hint: "Date (e.g. 15 Oct)",
-                  readOnly: true,
-                  onTap: () async {
-                    final DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2030),
-                      builder: (context, child) {
-                        return Theme(
-                          data: Theme.of(context).copyWith(
-                            colorScheme: const ColorScheme.light(
-                              primary: AppColors.primaryColor,
-                              onPrimary: Colors.white,
-                              onSurface: AppColors.textPrimaryColor,
+                  const SizedBox(height: 20),
+                  _buildInputField(
+                    controller: _fromController,
+                    icon: Icons.my_location,
+                    hint: "From (e.g. Cairo)",
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter departure location";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInputField(
+                    controller: _toController,
+                    icon: Icons.location_on,
+                    hint: "To (e.g. Alexandria)",
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "Please enter destination";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInputField(
+                    controller: _dateController,
+                    icon: Icons.calendar_today,
+                    hint: "Date (e.g. 15 Oct)",
+                    readOnly: true,
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2030),
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: const ColorScheme.light(
+                                primary: AppColors.primaryColor,
+                                onPrimary: Colors.white,
+                                onSurface: AppColors.textPrimaryColor,
+                              ),
                             ),
-                          ),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if (picked != null) {
-                      setState(() {
-                        // basic formatting
-                        _dateController.text = "${picked.day}/${picked.month}/${picked.year}";
-                      });
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        // Form is valid, perform search
+                            child: child!,
+                          );
+                        },
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          // basic formatting
+                          _dateController.text =
+                              "${picked.day}/${picked.month}/${picked.year}";
+                        });
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          // Form is valid, perform search
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                    ),
-                    child: const Text(
-                      "Search",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                      child: const Text(
+                        "Search",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
             ),
           ),
 
@@ -185,18 +188,22 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    const PopupMenuItem<String>(
-                      value: 'highest',
-                      child: Text('Highest Price'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'lowest',
-                      child: Text('Lowest Price'),
-                    ),
-                  ],
+                  itemBuilder: (BuildContext context) =>
+                      <PopupMenuEntry<String>>[
+                        const PopupMenuItem<String>(
+                          value: 'highest',
+                          child: Text('Highest Price'),
+                        ),
+                        const PopupMenuItem<String>(
+                          value: 'lowest',
+                          child: Text('Lowest Price'),
+                        ),
+                      ],
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: const Color(0xFFEBF1FF),
                       borderRadius: BorderRadius.circular(10),
@@ -225,9 +232,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
           const SizedBox(height: 15),
 
           // Results List
-          const Expanded(
-            child: JourneyList(),
-          ),
+          const Expanded(child: JourneyList()),
         ],
       ),
     );
@@ -249,9 +254,10 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(
-            color: Colors.grey.shade400,
-            fontSize: 14,
-            fontWeight: FontWeight.w600),
+          color: Colors.grey.shade400,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
         prefixIcon: Icon(icon, color: AppColors.primaryColor, size: 20),
         filled: true,
         fillColor: const Color(0xFFF1F4F9),

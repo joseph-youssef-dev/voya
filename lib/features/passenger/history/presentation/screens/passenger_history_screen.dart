@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:voya/core/constants/app_colors.dart';
 import 'package:voya/core/databases/api/dio_consumer.dart';
+import 'package:voya/core/shared/custom_header.dart';
 import 'package:voya/features/passenger/history/data/api/history_api_service.dart';
 import 'package:voya/features/passenger/history/data/models/my_trip_model.dart';
 import 'package:voya/features/passenger/history/logic/cubit/history_cubit.dart';
@@ -20,6 +21,7 @@ class PassengerHistoryScreen extends StatelessWidget {
       child: SafeArea(
         child: Column(
           children: [
+            const CustomHeader(title: 'My Trips'),
             const Padding(
               padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Row(
@@ -40,7 +42,9 @@ class PassengerHistoryScreen extends StatelessWidget {
                 builder: (context, state) {
                   if (state is HistoryLoading) {
                     return const Center(
-                      child: CircularProgressIndicator(color: Color(0xFF0D32B3)),
+                      child: CircularProgressIndicator(
+                        color: Color(0xFF0D32B3),
+                      ),
                     );
                   } else if (state is HistoryFailure) {
                     return Center(
@@ -58,7 +62,11 @@ class PassengerHistoryScreen extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.receipt_long_outlined, size: 64, color: Color(0xFFCBD5E1)),
+                            Icon(
+                              Icons.receipt_long_outlined,
+                              size: 64,
+                              color: Color(0xFFCBD5E1),
+                            ),
                             SizedBox(height: 16),
                             Text(
                               "No trips yet",
@@ -136,10 +144,17 @@ class _MyTripCard extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFF0D32B3), width: 2.5),
+                      border: Border.all(
+                        color: const Color(0xFF0D32B3),
+                        width: 2.5,
+                      ),
                     ),
                   ),
-                  Container(width: 2, height: 36, color: const Color(0xFFF0F0F0)),
+                  Container(
+                    width: 2,
+                    height: 36,
+                    color: const Color(0xFFF0F0F0),
+                  ),
                   Container(
                     width: 10,
                     height: 10,
@@ -213,7 +228,11 @@ class _MyTripCard extends StatelessWidget {
           const SizedBox(height: 14),
           Row(
             children: [
-              const Icon(Icons.person_outline, size: 16, color: Color(0xFF9E9E9E)),
+              const Icon(
+                Icons.person_outline,
+                size: 16,
+                color: Color(0xFF9E9E9E),
+              ),
               const SizedBox(width: 6),
               Text(
                 trip.driverName.replaceAll(RegExp(r'\\'), '').trim(),
