@@ -5,6 +5,8 @@ import 'package:voya/core/constants/app_strings.dart';
 import 'package:voya/core/databases/cache/cache_helper.dart';
 import 'package:voya/core/enums/role_enum.dart';
 import 'package:voya/features/driver/driver_main_screen.dart';
+import 'package:voya/features/driver_m/home/bottom_nav.dart';
+import 'package:voya/features/driver_m/register/register_driver.dart';
 import 'package:voya/features/passenger/passenger_main_screen.dart';
 import 'package:voya/features/passenger/auth/presentation/screens/passenger_register_screen.dart';
 
@@ -70,6 +72,11 @@ class _AppRootState extends State<AppRoot> {
                 builder: (context) => const PassengerRegisterScreen(),
               ),
             );
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const RegisterDriver()),
+            );
           }
         },
       );
@@ -80,6 +87,7 @@ class _AppRootState extends State<AppRoot> {
       return PassengerMainScreen();
     }
 
-    return DriverMainScreen();
+    // return DriverMainScreen();
+    return CustomBottomNavBar();
   }
 }
