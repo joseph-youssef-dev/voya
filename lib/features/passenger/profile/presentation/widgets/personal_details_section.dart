@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voya/features/passenger/profile/data/models/passenger_profile_model.dart';
+import 'package:voya/features/passenger/profile/logic/cubit/profile_cubit.dart';
+import 'package:voya/features/passenger/profile/presentation/screens/edit_passenger_profile_screen.dart';
 
 class PersonalDetailsSection extends StatelessWidget {
   final PassengerProfileModel profile;
@@ -24,13 +27,39 @@ class PersonalDetailsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Personal Details",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: Color(0xFF1E1E1E),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Personal Details",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF1E1E1E),
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditPassengerProfileScreen(
+                        profile: profile,
+                        cubit: context.read<ProfileCubit>(),
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.edit, size: 16, color: Color(0xFF0D32B3)),
+                label: const Text(
+                  "Edit",
+                  style: TextStyle(
+                    color: Color(0xFF0D32B3),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 24),
           _buildDetailItem(

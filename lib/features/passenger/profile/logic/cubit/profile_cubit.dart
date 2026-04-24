@@ -16,4 +16,31 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileFailure(errorMessage: e.toString()));
     }
   }
+
+  Future<void> updateProfile({
+    required String firstName,
+    required String lastName,
+    required String birthDate,
+    required String phone,
+    required String town,
+    String? profileImagePath,
+  }) async {
+    emit(ProfileUpdateLoading());
+    try {
+      await apiService.updateProfile(
+        firstName: firstName,
+        lastName: lastName,
+        birthDate: birthDate,
+        phone: phone,
+        town: town,
+        profileImagePath: profileImagePath,
+      );
+      emit(ProfileUpdateSuccess(message: "Profile updated successfully"));
+      // Wait for listeners (Navigator.pop) to process before refreshing
+      await Future.delayed(const Duration(milliseconds: 300));
+      fetchProfile();
+    } catch (e) {
+      emit(ProfileUpdateFailure(errorMessage: e.toString()));
+    }
+  }
 }

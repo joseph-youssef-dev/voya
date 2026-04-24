@@ -27,7 +27,18 @@ class PassengerProfileScreen extends StatelessWidget {
               const SizedBox(height: 45),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: BlocBuilder<ProfileCubit, ProfileState>(
+                child: BlocConsumer<ProfileCubit, ProfileState>(
+                  // Only rebuild UI on states that affect the displayed data
+                  buildWhen: (prev, curr) =>
+                      curr is ProfileLoading ||
+                      curr is ProfileFailure ||
+                      curr is ProfileSuccess,
+                  listenWhen: (prev, curr) =>
+                      curr is ProfileUpdateSuccess ||
+                      curr is ProfileUpdateFailure,
+                  listener: (context, state) {
+                    // Nothing extra needed here; fetchProfile handles refresh
+                  },
                   builder: (context, state) {
                     if (state is ProfileLoading) {
                       return const Center(

@@ -15,10 +15,7 @@ class ProfileHeaderCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFF0D32B3),
-            Color(0xFF0A2B99),
-          ],
+          colors: [Color(0xFF0D32B3), Color(0xFF0A2B99)],
         ),
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
@@ -42,7 +39,10 @@ class ProfileHeaderCard extends StatelessWidget {
             child: profile.profileImage != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(22),
-                    child: Image.network(profile.profileImage!, fit: BoxFit.cover),
+                    child: Image.network(
+                      profile.profileImage!,
+                      fit: BoxFit.cover,
+                    ),
                   )
                 : const Icon(Icons.person, color: Colors.white, size: 44),
           ),

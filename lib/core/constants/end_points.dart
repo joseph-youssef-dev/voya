@@ -11,6 +11,7 @@ class EndPoints {
   /// passenger endpoints
   static const String getPassengerProfile = "/Passanger/GetProfile";
   static const String getMyTrips = "/Passanger/GetMyTrips";
+  static const String updatePassengerProfile = "/Passanger/UpdateProflie";
 }
 
 class ApiKey {
