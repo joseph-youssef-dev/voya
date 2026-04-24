@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:voya/core/databases/api/dio_consumer.dart';
 import 'package:voya/features/passenger/home/data/api/home_api_service.dart';
 import 'package:voya/features/passenger/home/logic/cubit/home_cubit.dart';
-import 'package:voya/core/constants/app_colors.dart';
 import 'package:voya/features/passenger/history/presentation/screens/passenger_history_screen.dart';
 import 'package:voya/features/passenger/home/presentation/screens/passenger_home_screen.dart';
 import 'package:voya/features/passenger/profile/presentation/screens/passenger_profile_screen.dart';
@@ -36,7 +35,10 @@ class _PassengerMainScreenState extends State<PassengerMainScreen> {
       )..fetchAllTrips(),
       child: Scaffold(
         backgroundColor: const Color(0xFFF6F8FE),
-        body: screens[selectedIndex],
+        body: IndexedStack(
+          index: selectedIndex,
+          children: screens,
+        ),
         bottomNavigationBar: SafeArea(
           child: Container(
             margin: const EdgeInsets.all(20),

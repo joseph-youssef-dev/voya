@@ -23,7 +23,7 @@ class PassengerProfileScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CustomHeader(title: 'Profile'),
+              const CustomHeader(title: 'Profile'),
               const SizedBox(height: 45),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -58,6 +58,7 @@ class PassengerProfileScreen extends StatelessWidget {
                           PersonalDetailsSection(profile: profile),
                           const SizedBox(height: 20),
                           const LogoutButton(),
+                          const SizedBox(height: 20),
                         ],
                       );
                     }

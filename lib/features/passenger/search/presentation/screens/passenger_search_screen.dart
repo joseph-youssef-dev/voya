@@ -29,8 +29,8 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
     return SafeArea(
       child: Column(
         children: [
-          CustomHeader(title: "Search Journey"),
-          SizedBox(height: 16),
+          const CustomHeader(title: "Search Journey"),
+          const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(

@@ -243,10 +243,11 @@ class _MyTripCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              const Icon(Icons.access_time, size: 16, color: Color(0xFF9E9E9E)),
+              const Icon(Icons.access_time,
+                  size: 16, color: Color(0xFF9E9E9E)),
               const SizedBox(width: 4),
               Text(
-                "$formattedTime  •  $formattedDate",
+                "$formattedTime  ·  $formattedDate",
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
