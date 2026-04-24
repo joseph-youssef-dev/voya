@@ -29,8 +29,8 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
     return SafeArea(
       child: Column(
         children: [
-          CustomHeader(title: 'Search Journey'),
-          // Search Form Section
+          CustomHeader(title: "Search Journey"),
+          SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -52,15 +52,6 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Search Journey",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textPrimaryColor,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
                   _buildInputField(
                     controller: _fromController,
                     icon: Icons.my_location,
@@ -111,7 +102,6 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                       );
                       if (picked != null) {
                         setState(() {
-                          // basic formatting
                           _dateController.text =
                               "${picked.day}/${picked.month}/${picked.year}";
                         });
@@ -123,9 +113,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          // Form is valid, perform search
-                        }
+                        if (_formKey.currentState?.validate() ?? false) {}
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryColor,
@@ -148,10 +136,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
               ),
             ),
           ),
-
           const SizedBox(height: 20),
-
-          // Results Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Row(
@@ -170,7 +155,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "Found 5 trips matching your search",
+                      "All available trips",
                       style: TextStyle(
                         color: Color(0xFF6B7280),
                         fontSize: 13,
@@ -182,9 +167,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                 const Spacer(),
                 PopupMenuButton<String>(
                   color: const Color(0xFFEBF1FF),
-                  onSelected: (value) {
-                    // TODO: Apply filter based on 'value'
-                  },
+                  onSelected: (value) {},
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -228,10 +211,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
               ],
             ),
           ),
-
           const SizedBox(height: 15),
-
-          // Results List
           const Expanded(child: JourneyList()),
         ],
       ),

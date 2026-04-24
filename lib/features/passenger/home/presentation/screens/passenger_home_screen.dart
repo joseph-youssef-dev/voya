@@ -9,15 +9,16 @@ class PassengerHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 16),
-        CustomHeader(title: 'Voya'),
-        SizedBox(height: 30),
-        SectionHeader(),
-        SizedBox(height: 10),
-        Expanded(child: JourneyList()),
-      ],
+    return SafeArea(
+      child: Column(
+        children: [
+          CustomHeader(title: 'Voya'),
+          SizedBox(height: 30),
+          SectionHeader(),
+          SizedBox(height: 10),
+          Expanded(child: JourneyList()),
+        ],
+      ),
     );
   }
 }
