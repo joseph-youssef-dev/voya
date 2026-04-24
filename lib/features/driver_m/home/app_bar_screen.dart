@@ -37,7 +37,7 @@ class AppBarScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.white.withOpacity(0.3),
+                        color: AppColors.white.withValues(alpha: 0.3),
                         blurRadius: 10,
                       ),
                     ],
@@ -51,7 +51,7 @@ class AppBarScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: AppColors.white.withOpacity(0.15),
+                      color: AppColors.white.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -66,7 +66,7 @@ class AppBarScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withOpacity(0.3),
+                            color: AppColors.primary.withValues(alpha: 0.3),
                             blurRadius: 15,
                             spreadRadius: 2,
                           ),

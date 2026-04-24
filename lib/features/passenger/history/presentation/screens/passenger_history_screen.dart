@@ -84,7 +84,7 @@ class PassengerHistoryScreen extends StatelessWidget {
                     return ListView.separated(
                       padding: const EdgeInsets.all(20),
                       itemCount: trips.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 16),
+                      separatorBuilder: (context, index) => const SizedBox(height: 16),
                       itemBuilder: (context, index) {
                         return _MyTripCard(trip: trips[index]);
                       },
@@ -125,7 +125,7 @@ class _MyTripCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),

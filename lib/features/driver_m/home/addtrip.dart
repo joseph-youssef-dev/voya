@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voya/features/driver_m/Theme/colors/app_colors.dart';
-import 'package:voya/features/driver_m/home/CompletedTripCard.dart';
+import 'package:voya/features/driver_m/home/completed_trip_card.dart';
 import 'package:voya/features/driver_m/home/app_bar_screen.dart';
 import 'package:voya/features/driver_m/home/trip/add_new_trip.dart';
 import 'package:voya/features/driver_m/home/waiting_trip_card.dart';
@@ -44,7 +44,7 @@ class CreateTrip extends StatelessWidget {
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.primary.withOpacity(0.3),
+                          color: AppColors.primary.withValues(alpha: 0.3),
                           blurRadius: 10,
                           offset: const Offset(0, 5),
                         ),

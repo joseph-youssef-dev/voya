@@ -4,11 +4,10 @@ import 'package:voya/app/splash_screen.dart';
 import 'package:voya/core/constants/app_strings.dart';
 import 'package:voya/core/databases/cache/cache_helper.dart';
 import 'package:voya/core/enums/role_enum.dart';
-import 'package:voya/features/driver/driver_main_screen.dart';
 import 'package:voya/features/driver_m/home/bottom_nav.dart';
 import 'package:voya/features/driver_m/register/register_driver.dart';
+import 'package:voya/features/passenger/auth/presentation/screens/passenger_login_screen.dart';
 import 'package:voya/features/passenger/passenger_main_screen.dart';
-import 'package:voya/features/passenger/auth/presentation/screens/passenger_register_screen.dart';
 
 class AppRoot extends StatefulWidget {
   const AppRoot({super.key});
@@ -69,7 +68,7 @@ class _AppRootState extends State<AppRoot> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const PassengerRegisterScreen(),
+                builder: (context) => const PassengerLoginScreen(),
               ),
             );
           } else {

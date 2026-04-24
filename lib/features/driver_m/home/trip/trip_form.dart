@@ -249,7 +249,7 @@ class TripForm extends StatelessWidget {
 
                         // From
                         DropdownButtonFormField<String>(
-                          value: state.from.isEmpty ? null : state.from,
+                          initialValue: state.from.isEmpty ? null : state.from,
                           decoration: InputDecoration(
                             labelText: "From",
                             prefixIcon: const Icon(Icons.my_location),
@@ -274,7 +274,7 @@ class TripForm extends StatelessWidget {
 
                         // To
                         DropdownButtonFormField<String>(
-                          value: state.to.isEmpty ? null : state.to,
+                          initialValue: state.to.isEmpty ? null : state.to,
                           decoration: InputDecoration(
                             labelText: "To",
                             prefixIcon: const Icon(Icons.location_on_outlined),

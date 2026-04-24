@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CarImageUploader extends StatefulWidget {
+  const CarImageUploader({super.key});
+
   @override
-  _CarImageUploaderState createState() => _CarImageUploaderState();
+  State<CarImageUploader> createState() => _CarImageUploaderState();
 }
 
 class _CarImageUploaderState extends State<CarImageUploader> {
