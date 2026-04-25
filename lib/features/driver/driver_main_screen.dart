@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voya/features/driver_m/register/register_driver.dart';
+import 'package:voya/features/driver_m/auth/presentation/screens/driver_register_screen.dart';
 
 class DriverMainScreen extends StatelessWidget {
   const DriverMainScreen({super.key});

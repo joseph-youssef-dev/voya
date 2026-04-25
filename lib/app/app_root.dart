@@ -4,8 +4,8 @@ import 'package:voya/app/splash_screen.dart';
 import 'package:voya/core/constants/app_strings.dart';
 import 'package:voya/core/databases/cache/cache_helper.dart';
 import 'package:voya/core/enums/role_enum.dart';
-import 'package:voya/features/driver_m/home/bottom_nav.dart';
-import 'package:voya/features/driver_m/register/register_driver.dart';
+import 'package:voya/features/driver_m/home/presentation/screens/bottom_nav.dart';
+import 'package:voya/features/driver_m/auth/presentation/screens/driver_register_screen.dart';
 import 'package:voya/features/passenger/auth/presentation/screens/passenger_login_screen.dart';
 import 'package:voya/features/passenger/passenger_main_screen.dart';
 
