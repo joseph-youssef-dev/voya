@@ -80,7 +80,7 @@ class SeatSelector extends StatelessWidget {
 // --- from trip_header.dart ---
 
 class TripHeader extends StatelessWidget {
-  const TripHeader({super.key});
+  const TripHeader({super.key, required String text});
 
   @override
   Widget build(BuildContext context) {
@@ -298,4 +298,3 @@ class SectionTitle extends StatelessWidget {
     );
   }
 }
-

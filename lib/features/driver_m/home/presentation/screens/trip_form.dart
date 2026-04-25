@@ -53,7 +53,7 @@ class TripForm extends StatelessWidget {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                const TripHeader(),
+                // const TripHeader(),
                 const SizedBox(height: 20),
 
                 Padding(
