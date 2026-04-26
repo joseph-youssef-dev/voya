@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voya/features/driver_m/Theme/colors/app_colors.dart';
+import 'package:voya/features/driver_m/auth/presentation/screens/driver_login_screen.dart';
 import 'package:voya/features/driver_m/home/presentation/screens/bottom_nav.dart';
 import 'package:voya/features/driver_m/auth/presentation/widgets/login_widgets.dart';
-import 'package:voya/features/driver_m/auth/presentation/screens/driver_login_screen.dart';
 
 // --- from login_button.dart ---
 
@@ -144,7 +144,7 @@ class SignupRow extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DesignLoginDriver()),
+              MaterialPageRoute(builder: (context) => DriverLoginScreen()),
             );
           },
           child: const Text(
@@ -159,4 +159,3 @@ class SignupRow extends StatelessWidget {
     );
   }
 }
-

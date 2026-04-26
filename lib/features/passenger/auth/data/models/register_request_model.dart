@@ -26,18 +26,18 @@ class RegisterRequestModel {
 
   Future<Map<String, dynamic>> toFormDataMap() async {
     final map = <String, dynamic>{
-      'ssn': ssn,
-      'email': email,
-      'password': password,
-      'firstName': firstName,
-      'lastName': lastName,
-      'birthDate': birthDate,
-      'phone': phone,
-      'town': town,
+      'SSN': ssn,
+      'Email': email,
+      'Password': password,
+      'FirstName': firstName,
+      'LastName': lastName,
+      'BirthDate': birthDate,
+      'Phone': phone,
+      'Town': town,
     };
 
     if (profileImage != null) {
-      map['profileImage'] = await MultipartFile.fromFile(
+      map['ProfileImage'] = await MultipartFile.fromFile(
         profileImage!.path,
         filename: profileImage!.path.split('/').last,
       );
