@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:voya/core/databases/api/api_consumer.dart';
 import 'package:voya/core/constants/end_points.dart';
+import 'package:voya/core/databases/cache/cache_helper.dart';
 import '../models/driver_profile_model.dart';
 
 class DriverProfileApiService {
@@ -8,15 +10,35 @@ class DriverProfileApiService {
   DriverProfileApiService({required this.api});
 
   Future<DriverProfileModel> getProfile() async {
-    final response = await api.get(EndPoints.getDriverProfile);
+    try {
+      debugPrint(
+        '🚀 Fetching Driver Profile from: ${EndPoints.getDriverProfile}',
+      );
+      final response = await api.get(EndPoints.getDriverProfile);
+      debugPrint('📥 Raw Driver Profile response: $response');
 
-    if (response is Map<String, dynamic> && response.containsKey('data')) {
-      return DriverProfileModel.fromJson(response['data']);
-    }
-    if (response is Map<String, dynamic>) {
-      return DriverProfileModel.fromJson(response);
-    }
+      if (response == null) {
+        throw Exception('Received null response from server');
+      }
 
-    throw Exception('Failed to load driver profile');
+      if (response is Map<String, dynamic>) {
+        final Map<String, dynamic> data =
+            (response.containsKey('data') && response['data'] != null)
+            ? Map<String, dynamic>.from(response['data'])
+            : Map<String, dynamic>.from(response);
+
+        if (response.containsKey('data') && response['data'] != null) {
+          debugPrint('✅ Found data object, parsing...');
+          return DriverProfileModel.fromJson(data);
+        }
+        debugPrint('ℹ️ No data object found, parsing root object...');
+        return DriverProfileModel.fromJson(data);
+      }
+
+      throw Exception('Unexpected response format: ${response.runtimeType}');
+    } catch (e) {
+      debugPrint('❌ GetDriverProfile error: $e');
+      rethrow;
+    }
   }
 }

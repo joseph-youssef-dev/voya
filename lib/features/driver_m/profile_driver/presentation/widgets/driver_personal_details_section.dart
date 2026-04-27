@@ -38,11 +38,6 @@ class DriverPersonalDetailsSection extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildDetailRow(Icons.email_outlined, "Email Address", profile.email),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Divider(color: Color(0xFFF1F4F9), thickness: 1.5),
-              ),
               _buildDetailRow(Icons.location_city_outlined, "Town", profile.town),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
@@ -115,11 +110,26 @@ class DriverPersonalDetailsSection extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
+                    Text(
+                      "License: ${vehicle.vehicleLicense}",
+                      style: const TextStyle(
+                        color: Color(0xFF0D32B3),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Text(
                       "Capacity: ${vehicle.numberOfPassengers} Passengers",
-                      style: const TextStyle(color: Color(0xFF5A6B87)),
+                      style: const TextStyle(color: Color(0xFF5A6B87), fontSize: 13),
                     ),
+                    if (vehicle.features != null && vehicle.features != "None") ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        "Features: ${vehicle.features}",
+                        style: const TextStyle(color: Color(0xFF5A6B87), fontSize: 13),
+                      ),
+                    ],
                   ],
                 ),
               )),

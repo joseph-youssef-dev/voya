@@ -38,6 +38,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
   // Vehicle info
   final TextEditingController _vehicleModelController = TextEditingController();
   final TextEditingController _vehicleColorController = TextEditingController();
+  final TextEditingController _vehicleLicenseController = TextEditingController();
   final TextEditingController _numberOfPassengersController = TextEditingController();
 
   // License info
@@ -57,6 +58,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
     _birthDateController.dispose();
     _vehicleModelController.dispose();
     _vehicleColorController.dispose();
+    _vehicleLicenseController.dispose();
     _licenseNumberController.dispose();
     _licenseExpiryDateController.dispose();
     _numberOfPassengersController.dispose();
@@ -290,6 +292,13 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                         ),
                         const SizedBox(height: 20),
                         AuthTextField(
+                          label: "VEHICLE LICENSE",
+                          hint: "Enter vehicle plate number",
+                          prefixIcon: Icons.pin,
+                          controller: _vehicleLicenseController,
+                        ),
+                        const SizedBox(height: 20),
+                        AuthTextField(
                           label: "NUMBER OF PASSENGERS",
                           hint: "14",
                           prefixIcon: Icons.groups,
@@ -395,6 +404,7 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                                           birthDate: _birthDateController.text.trim(),
                                           vehicleModel: _vehicleModelController.text.trim(),
                                           vehicleColor: _vehicleColorController.text.trim(),
+                                          vehicleLicense: _vehicleLicenseController.text.trim(),
                                           numberOfPassengers: int.tryParse(_numberOfPassengersController.text.trim()) ?? 0,
                                           vehicleImages: _vehicleImages,
                                           licenseNumber: _licenseNumberController.text.trim(),

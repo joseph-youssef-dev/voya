@@ -37,7 +37,7 @@ class RegisterRequestModel {
     };
 
     if (profileImage != null) {
-      map['ProfileImage'] = await MultipartFile.fromFile(
+      map['profileImage'] = await MultipartFile.fromFile(
         profileImage!.path,
         filename: profileImage!.path.split('/').last,
       );

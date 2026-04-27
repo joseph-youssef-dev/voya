@@ -1,45 +1,36 @@
 class DriverProfileModel {
-  final String firstName;
-  final String lastName;
-  final String email;
+  final String fullName;
   final String phone;
   final String town;
   final String birthDate;
   final String ssn;
+  final String status;
   final String? profileImage;
   final List<VehicleModel> vehicles;
-  final LicenseModel? license;
 
   DriverProfileModel({
-    required this.firstName,
-    required this.lastName,
-    required this.email,
+    required this.fullName,
     required this.phone,
     required this.town,
     required this.birthDate,
     required this.ssn,
+    required this.status,
     this.profileImage,
     required this.vehicles,
-    this.license,
   });
 
   factory DriverProfileModel.fromJson(Map<String, dynamic> json) {
     return DriverProfileModel(
-      firstName: json['firstName'] ?? '',
-      lastName: json['lastName'] ?? '',
-      email: json['email'] ?? '',
-      phone: json['phone'] ?? '',
-      town: json['town'] ?? '',
-      birthDate: json['birthDate'] ?? '',
-      ssn: json['ssn'] ?? '',
-      profileImage: json['profileImage'],
-      vehicles: (json['vehicles'] as List?)
-              ?.map((v) => VehicleModel.fromJson(v))
-              .toList() ??
-          [],
-      license: json['driverLicense'] != null
-          ? LicenseModel.fromJson(json['driverLicense'])
-          : null,
+      fullName: json['fullName'] ?? json['FullName'] ?? '',
+      phone: json['phoneNumber'] ?? json['PhoneNumber'] ?? json['phone'] ?? '',
+      town: json['town'] ?? json['Town'] ?? '',
+      birthDate: json['birthDate'] ?? json['BirthDate'] ?? '',
+      ssn: json['ssn'] ?? json['SSN'] ?? '',
+      status: json['status'] ?? json['Status'] ?? '',
+      profileImage: json['profileImage'] ?? json['ProfileImage'],
+      vehicles: (json['vehicles'] as List? ?? json['Vehicles'] as List? ?? [])
+              .map((v) => VehicleModel.fromJson(v as Map<String, dynamic>))
+              .toList(),
     );
   }
 }
@@ -48,44 +39,30 @@ class VehicleModel {
   final int id;
   final String model;
   final String color;
+  final String vehicleLicense;
   final int numberOfPassengers;
-  final List<String> images;
+  final String? image;
+  final String? features;
 
   VehicleModel({
     required this.id,
     required this.model,
     required this.color,
+    required this.vehicleLicense,
     required this.numberOfPassengers,
-    required this.images,
+    this.image,
+    this.features,
   });
 
   factory VehicleModel.fromJson(Map<String, dynamic> json) {
     return VehicleModel(
-      id: json['id'] ?? 0,
-      model: json['model'] ?? '',
-      color: json['color'] ?? '',
-      numberOfPassengers: json['numberOfPassangers'] ?? 0,
-      images: (json['images'] as List?)?.map((i) => i.toString()).toList() ?? [],
-    );
-  }
-}
-
-class LicenseModel {
-  final String licenseNumber;
-  final String expiryDate;
-  final String? licenseImage;
-
-  LicenseModel({
-    required this.licenseNumber,
-    required this.expiryDate,
-    this.licenseImage,
-  });
-
-  factory LicenseModel.fromJson(Map<String, dynamic> json) {
-    return LicenseModel(
-      licenseNumber: json['licenseNumber'] ?? '',
-      expiryDate: json['expiryDate'] ?? '',
-      licenseImage: json['licenseImage'],
+      id: json['id'] ?? json['Id'] ?? 0,
+      model: json['model'] ?? json['Model'] ?? '',
+      color: json['color'] ?? json['Color'] ?? '',
+      vehicleLicense: json['vehicleLicense'] ?? json['VehicleLicense'] ?? '',
+      numberOfPassengers: json['numberOfPassangers'] ?? json['NumberOfPassangers'] ?? 0,
+      image: json['image'] ?? json['Image'],
+      features: json['features'] ?? json['Features'],
     );
   }
 }

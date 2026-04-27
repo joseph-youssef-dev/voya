@@ -53,39 +53,55 @@ class _PassengerMainScreenState extends State<PassengerMainScreen> {
       child: Scaffold(
         backgroundColor: const Color(0xFFF6F8FE),
         body: IndexedStack(index: selectedIndex, children: screens),
-        bottomNavigationBar: SafeArea(
-          child: Container(
-            margin: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-            child: GNav(
-              selectedIndex: selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  selectedIndex = index;
-                });
-              },
-              activeColor: const Color(0xFF0D32B3),
-              tabBackgroundColor: const Color(0xFFEBF1FF),
-              color: Colors.grey.shade500,
-              gap: 8,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              tabs: const [
-                GButton(icon: Icons.directions_car, text: 'HOME'),
-                GButton(icon: Icons.search, text: 'SEARCH'),
-                GButton(icon: Icons.receipt_long, text: 'MY TRIPS'),
-                GButton(icon: Icons.person, text: 'PROFILE'),
-              ],
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 25,
+                color: Colors.black.withOpacity(0.08),
+                offset: const Offset(0, -5),
+              )
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10),
+              child: GNav(
+                rippleColor: Colors.grey[300]!,
+                hoverColor: Colors.grey[100]!,
+                gap: 6,
+                activeColor: const Color(0xFF0D32B3),
+                iconSize: 22,
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                duration: const Duration(milliseconds: 400),
+                tabBackgroundColor: const Color(0xFFEBF1FF),
+                color: const Color(0xFF5A6B87),
+                tabs: const [
+                  GButton(
+                    icon: Icons.home_rounded,
+                    text: 'Home',
+                  ),
+                  GButton(
+                    icon: Icons.search_rounded,
+                    text: 'Search',
+                  ),
+                  GButton(
+                    icon: Icons.history_rounded,
+                    text: 'History',
+                  ),
+                  GButton(
+                    icon: Icons.person_rounded,
+                    text: 'Profile',
+                  ),
+                ],
+                selectedIndex: selectedIndex,
+                onTabChange: (index) {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                },
+              ),
             ),
           ),
         ),

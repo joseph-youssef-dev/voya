@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:voya/core/constants/end_points.dart';
 import 'package:voya/core/databases/api/api_consumer.dart';
 import 'package:voya/core/errors/expentions.dart';
@@ -19,46 +20,75 @@ class DioConsumer extends ApiConsumer {
           return handler.next(options);
         },
         onError: (DioException e, handler) async {
-          if (e.response?.statusCode == 401) {
+          // Do not attempt to refresh token for auth endpoints (login/register)
+          final String path = e.requestOptions.path;
+          final bool isAuthPath = path.contains(EndPoints.login) || 
+                                 path.contains(EndPoints.registerPassenger) || 
+                                 path.contains(EndPoints.registerDriver);
+
+          if (e.response?.statusCode == 401 && !isAuthPath) {
+            debugPrint(
+              '⚠️ 401 Unauthorized detected. Attempting to refresh token...',
+            );
             final refreshToken = CacheHelper().getData(key: 'refreshToken');
             final oldToken = CacheHelper().getData(key: 'token');
+
             if (refreshToken != null) {
               try {
+                debugPrint('🔄 Refreshing token using: $refreshToken');
+                // Some backends expect 'token', others 'accessToken'
                 final refreshResponse = await Dio().post(
                   '${EndPoints.baserUrl}${EndPoints.refreshToken}',
                   data: {
                     'token': oldToken,
+                    'accessToken': oldToken,
                     'refreshToken': refreshToken,
                   },
                 );
+
+                debugPrint('📥 Refresh response: ${refreshResponse.data}');
 
                 if (refreshResponse.statusCode == 200) {
                   final data = refreshResponse.data;
                   String? newToken;
                   String? newRefreshToken;
 
-                  if (data is Map<String, dynamic> && data.containsKey('data')) {
-                    newToken = data['data']['token'];
+                  if (data is Map<String, dynamic> &&
+                      data.containsKey('data')) {
+                    newToken =
+                        data['data']['token'] ?? data['data']['accessToken'];
                     newRefreshToken = data['data']['refreshToken'];
                   } else if (data is Map<String, dynamic>) {
-                    newToken = data['token'];
+                    newToken = data['token'] ?? data['accessToken'];
                     newRefreshToken = data['refreshToken'];
                   }
 
                   if (newToken != null) {
+                    debugPrint(
+                      '✅ Token refreshed successfully. Retrying original request...',
+                    );
                     await CacheHelper().saveData(key: 'token', value: newToken);
                     if (newRefreshToken != null) {
-                      await CacheHelper().saveData(key: 'refreshToken', value: newRefreshToken);
+                      await CacheHelper().saveData(
+                        key: 'refreshToken',
+                        value: newRefreshToken,
+                      );
                     }
 
-                    e.requestOptions.headers['Authorization'] = 'Bearer $newToken';
+                    e.requestOptions.headers['Authorization'] =
+                        'Bearer $newToken';
                     final retryResponse = await dio.fetch(e.requestOptions);
                     return handler.resolve(retryResponse);
                   }
                 }
-              } catch (_) {
-                // If refresh fails, proceed with the original error
+              } catch (refreshError) {
+                debugPrint('❌ Token refresh failed: $refreshError');
+                // If it's a real 401 during refresh, we must logout
+                await CacheHelper().clearData();
               }
+            } else {
+              debugPrint('🚫 No refresh token found in cache.');
+              await CacheHelper().clearData();
             }
           }
           return handler.next(e);

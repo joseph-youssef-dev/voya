@@ -48,7 +48,7 @@ class DriverProfileHeaderCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            "${profile.firstName} ${profile.lastName}",
+            profile.fullName,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
@@ -58,16 +58,32 @@ class DriverProfileHeaderCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            "Voya Professional Driver",
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 1.2,
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: profile.status.toLowerCase() == 'active' 
+                  ? Colors.green.withValues(alpha: 0.2) 
+                  : Colors.red.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: profile.status.toLowerCase() == 'active' 
+                    ? Colors.green.withValues(alpha: 0.5) 
+                    : Colors.red.withValues(alpha: 0.5),
+              ),
+            ),
+            child: Text(
+              profile.status.toUpperCase(),
+              style: TextStyle(
+                color: profile.status.toLowerCase() == 'active' 
+                    ? Colors.greenAccent 
+                    : Colors.redAccent,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+              ),
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(

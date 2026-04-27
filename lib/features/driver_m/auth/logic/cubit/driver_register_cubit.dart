@@ -23,6 +23,7 @@ class DriverRegisterCubit extends Cubit<DriverRegisterState> {
     required String birthDate,
     required String vehicleModel,
     required String vehicleColor,
+    required String vehicleLicense,
     required int numberOfPassengers,
     List<File> vehicleImages = const [],
     required String licenseNumber,
@@ -44,6 +45,7 @@ class DriverRegisterCubit extends Cubit<DriverRegisterState> {
         vehicle: VehicleRequestModel(
           model: vehicleModel.trim(),
           color: vehicleColor.trim(),
+          vehicleLicense: vehicleLicense.trim(),
           numberOfPassengers: numberOfPassengers,
           images: vehicleImages,
         ),
@@ -77,6 +79,7 @@ class DriverRegisterCubit extends Cubit<DriverRegisterState> {
           await CacheHelper().saveData(key: 'refreshToken', value: response['refreshToken']);
         }
       }
+      await CacheHelper().saveData(key: 'email', value: email.trim());
 
       emit(DriverRegisterSuccess(message: message.toString()));
     } catch (e) {

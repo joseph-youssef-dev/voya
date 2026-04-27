@@ -28,47 +28,51 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
         index: currentIndex,
         children: pages,
       ),
-      bottomNavigationBar: SafeArea(
-        child: Container(
-          margin: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-          child: GNav(
-            selectedIndex: currentIndex,
-            onTabChange: (index) {
-              setState(() {
-                currentIndex = index;
-              });
-            },
-            activeColor: const Color(0xFF0D32B3),
-            tabBackgroundColor: const Color(0xFFEBF1FF),
-            color: Colors.grey.shade500,
-            gap: 8,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            tabs: const [
-              GButton(
-                icon: Icons.home_outlined,
-                text: 'HOME',
-              ),
-              GButton(
-                icon: Icons.add_circle_outline,
-                text: 'ADD',
-              ),
-              GButton(
-                icon: Icons.person_outline,
-                text: 'PROFILE',
-              ),
-            ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 25,
+              color: Colors.black.withOpacity(0.08),
+              offset: const Offset(0, -5),
+            )
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+            child: GNav(
+              rippleColor: Colors.grey[300]!,
+              hoverColor: Colors.grey[100]!,
+              gap: 8,
+              activeColor: const Color(0xFF0D32B3),
+              iconSize: 24,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: const Duration(milliseconds: 400),
+              tabBackgroundColor: const Color(0xFFEBF1FF),
+              color: const Color(0xFF5A6B87),
+              tabs: const [
+                GButton(
+                  icon: Icons.dashboard_rounded,
+                  text: 'Home',
+                ),
+                GButton(
+                  icon: Icons.add_box_rounded,
+                  text: 'Add Trip',
+                ),
+                GButton(
+                  icon: Icons.person_rounded,
+                  text: 'Profile',
+                ),
+              ],
+              selectedIndex: currentIndex,
+              onTabChange: (index) {
+                setState(() {
+                  currentIndex = index;
+                });
+              },
+            ),
           ),
         ),
       ),

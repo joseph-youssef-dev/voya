@@ -4,12 +4,14 @@ import 'package:dio/dio.dart';
 class VehicleRequestModel {
   final String model;
   final String color;
+  final String vehicleLicense;
   final int numberOfPassengers;
   final List<File> images;
 
   VehicleRequestModel({
     required this.model,
     required this.color,
+    required this.vehicleLicense,
     required this.numberOfPassengers,
     required this.images,
   });
@@ -64,15 +66,16 @@ class DriverRegisterRequestModel {
       'Phone': phone,
       'Town': town,
       'BirthDate': birthDate,
-      'DriverLicense.LicenseNumber': driverLicense.licenseNumber,
-      'DriverLicense.ExpiryDate': driverLicense.expiryDate,
       'Vehicles[0].Model': vehicle.model,
       'Vehicles[0].Color': vehicle.color,
+      'Vehicles[0].VehicleLicense': vehicle.vehicleLicense,
       'Vehicles[0].NumberOfPassangers': vehicle.numberOfPassengers,
+      'DriverLicense.LicenseNumber': driverLicense.licenseNumber,
+      'DriverLicense.ExpiryDate': driverLicense.expiryDate,
     };
 
     if (profileImage != null) {
-      map['ProfileImage'] = await MultipartFile.fromFile(
+      map['profileImage'] = await MultipartFile.fromFile(
         profileImage!.path,
         filename: profileImage!.path.split('/').last,
       );
@@ -85,12 +88,18 @@ class DriverRegisterRequestModel {
       );
     }
 
-    // Add vehicle images
-    for (int i = 0; i < vehicle.images.length; i++) {
-      map['Vehicles[0].Images'] = await MultipartFile.fromFile(
-        vehicle.images[i].path,
-        filename: vehicle.images[i].path.split('/').last,
-      );
+    // Add multiple vehicle images
+    if (vehicle.images.isNotEmpty) {
+      final List<MultipartFile> multipartImages = [];
+      for (var file in vehicle.images) {
+        multipartImages.add(
+          await MultipartFile.fromFile(
+            file.path,
+            filename: file.path.split('/').last,
+          ),
+        );
+      }
+      map['Vehicles[0].Images'] = multipartImages;
     }
 
     return map;
