@@ -14,31 +14,49 @@ class PassengerHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HistoryCubit(
-        apiService: HistoryApiService(api: DioConsumer(dio: Dio())),
-      )..fetchMyTrips(),
-      child: SafeArea(
-        child: Column(
-          children: [
-            const CustomHeader(title: 'My Trips'),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-              child: Row(
-                children: [
-                  Text(
-                    "My Trips",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.textPrimaryColor,
-                    ),
+    return SafeArea(
+      child: Column(
+        children: [
+          const CustomHeader(title: 'My Trips'),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            child: Row(
+              children: [
+                Text(
+                  "My Trips",
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.textPrimaryColor,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            Expanded(
+          ),
+          Expanded(
+            child: BlocListener<HistoryCubit, HistoryState>(
+              listener: (context, state) {
+                if (state is UpdateBookingSuccess) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.message),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else if (state is UpdateBookingFailure) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.errorMessage),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
               child: BlocBuilder<HistoryCubit, HistoryState>(
+                buildWhen: (previous, current) =>
+                    current is HistoryLoading ||
+                    current is HistorySuccess ||
+                    current is HistoryFailure,
                 builder: (context, state) {
                   if (state is HistoryLoading) {
                     return const Center(
@@ -84,7 +102,8 @@ class PassengerHistoryScreen extends StatelessWidget {
                     return ListView.separated(
                       padding: const EdgeInsets.all(20),
                       itemCount: trips.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 16),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 16),
                       itemBuilder: (context, index) {
                         return _MyTripCard(trip: trips[index]);
                       },
@@ -95,8 +114,8 @@ class PassengerHistoryScreen extends StatelessWidget {
                 },
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -118,6 +137,22 @@ class _MyTripCard extends StatelessWidget {
       formattedDate = "${date.day}/${date.month}/${date.year}";
     } catch (_) {}
 
+    final Color statusColor;
+    final Color statusBg;
+    switch (trip.status.toLowerCase()) {
+      case 'accepted':
+        statusColor = const Color(0xFF10B981);
+        statusBg = const Color(0xFFD1FAE5);
+        break;
+      case 'rejected':
+        statusColor = const Color(0xFFEF4444);
+        statusBg = const Color(0xFFFEE2E2);
+        break;
+      default:
+        statusColor = const Color(0xFFF59E0B);
+        statusBg = const Color(0xFFFEF3C7);
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -134,6 +169,58 @@ class _MyTripCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: statusBg,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  trip.status.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    color: statusColor,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              if (trip.status.toLowerCase() == 'pending')
+                TextButton.icon(
+                  onPressed: () => _showEditDialog(context, trip),
+                  icon: const Icon(
+                    Icons.edit_outlined,
+                    size: 16,
+                    color: Color(0xFF0D32B3),
+                  ),
+                  label: const Text(
+                    "Edit",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF0D32B3),
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    backgroundColor: const Color(0xFFEBF1FF),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 16),
           Row(
             children: [
               Column(
@@ -243,8 +330,7 @@ class _MyTripCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              const Icon(Icons.access_time,
-                  size: 16, color: Color(0xFF9E9E9E)),
+              const Icon(Icons.access_time, size: 16, color: Color(0xFF9E9E9E)),
               const SizedBox(width: 4),
               Text(
                 "$formattedTime  ·  $formattedDate",
@@ -257,6 +343,129 @@ class _MyTripCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  void _showEditDialog(BuildContext context, MyTripModel trip) {
+    int seats = trip.numberOfSeats;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(24),
+              ),
+              title: const Text(
+                "Update Booking",
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Adjust the number of seats for this booking.",
+                    style: TextStyle(color: Color(0xFF5A6B87), fontSize: 14),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _buildCounterButton(
+                        icon: Icons.remove,
+                        onTap: () {
+                          if (seats > 1) setState(() => seats--);
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Text(
+                          "$seats",
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w900,
+                            color: Color(0xFF1E2432),
+                          ),
+                        ),
+                      ),
+                      _buildCounterButton(
+                        icon: Icons.add,
+                        onTap: () {
+                          setState(() => seats++);
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    "Cancel",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF0D32B3),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {
+                    context.read<HistoryCubit>().updateBooking(
+                      bookingId: trip.id,
+                      numberOfSeats: seats,
+                    );
+                    Navigator.pop(context);
+                  },
+                  child: BlocBuilder<HistoryCubit, HistoryState>(
+                    builder: (context, state) {
+                      if (state is UpdateBookingLoading) {
+                        return const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        );
+                      }
+                      return const Text(
+                        "Update",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildCounterButton({
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF1F4F9),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: const Color(0xFF0D32B3), size: 20),
       ),
     );
   }

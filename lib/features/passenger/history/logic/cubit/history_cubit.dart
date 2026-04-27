@@ -16,4 +16,23 @@ class HistoryCubit extends Cubit<HistoryState> {
       emit(HistoryFailure(errorMessage: e.toString()));
     }
   }
+
+  Future<void> updateBooking({
+    required int bookingId,
+    required int numberOfSeats,
+    dynamic receiptImage,
+  }) async {
+    emit(UpdateBookingLoading());
+    try {
+      await apiService.updateBooking(
+        bookingId: bookingId,
+        numberOfSeats: numberOfSeats,
+        receiptImage: receiptImage,
+      );
+      emit(UpdateBookingSuccess(message: "Booking updated successfully!"));
+      fetchMyTrips();
+    } catch (e) {
+      emit(UpdateBookingFailure(errorMessage: e.toString()));
+    }
+  }
 }

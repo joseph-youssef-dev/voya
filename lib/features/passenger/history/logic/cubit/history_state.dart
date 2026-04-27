@@ -15,3 +15,15 @@ class HistoryFailure extends HistoryState {
   final String errorMessage;
   HistoryFailure({required this.errorMessage});
 }
+
+class UpdateBookingLoading extends HistoryState {}
+
+class UpdateBookingSuccess extends HistoryState {
+  final String message;
+  UpdateBookingSuccess({required this.message});
+}
+
+class UpdateBookingFailure extends HistoryState {
+  final String errorMessage;
+  UpdateBookingFailure({required this.errorMessage});
+}

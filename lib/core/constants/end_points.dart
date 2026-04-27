@@ -5,6 +5,7 @@ class EndPoints {
   static const String registerPassenger = "/Auth/register-passenger";
   static const String registerDriver = "/Auth/register-driver";
 
+  static const String verfiyAccount = "/Auth/verify-email-otp";
   static const String forgetPassword = "/Auth/forget-password";
   static const String resetPassword = "/Auth/reset-password";
   static const String logout = "/Auth/logout";
@@ -25,6 +26,7 @@ class EndPoints {
 
   /// driver endpoints
   static const String getDriverProfile = "/Driver/get-profile";
+  static const String updateDriverProfile = "/Driver/update-driver";
   static const String getDriverTrips = "/Driver/get-trips";
   static const String getVehicles = "/Driver/get-vehicles";
   static const String addVehicle = "/Driver/add-vehicle";

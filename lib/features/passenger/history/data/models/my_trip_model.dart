@@ -7,6 +7,8 @@ class MyTripModel {
   final String driverName;
   final String vehicleModel;
   final int availableSeats;
+  final String status;
+  final int numberOfSeats;
 
   MyTripModel({
     required this.id,
@@ -17,6 +19,8 @@ class MyTripModel {
     required this.driverName,
     required this.vehicleModel,
     required this.availableSeats,
+    required this.status,
+    required this.numberOfSeats,
   });
 
   factory MyTripModel.fromJson(Map<String, dynamic> json) {
@@ -29,6 +33,8 @@ class MyTripModel {
       driverName: json['driverName'] ?? '',
       vehicleModel: json['vehicleModel'] ?? '',
       availableSeats: json['availableSeats'] ?? 0,
+      status: json['status'] ?? 'Pending',
+      numberOfSeats: json['numberOfPassangers'] ?? 1,
     );
   }
 }

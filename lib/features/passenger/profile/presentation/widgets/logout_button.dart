@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voya/core/databases/cache/cache_helper.dart';
 
 class LogoutButton extends StatelessWidget {
   const LogoutButton({super.key});
@@ -21,7 +22,12 @@ class LogoutButton extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
-          onTap: () {},
+          onTap: () async {
+            await CacheHelper().clearData();
+            if (context.mounted) {
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+            }
+          },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
             child: Row(

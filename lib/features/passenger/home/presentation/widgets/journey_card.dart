@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dio/dio.dart';
+import 'package:voya/core/databases/api/dio_consumer.dart';
+import 'package:voya/features/passenger/booking/presentation/screens/booking_screen.dart';
+import 'package:voya/features/passenger/booking/logic/cubit/booking_cubit.dart';
+import 'package:voya/features/passenger/booking/data/api/booking_api_service.dart';
+import 'package:voya/features/passenger/history/logic/cubit/history_cubit.dart';
 
 class JourneyCard extends StatelessWidget {
+  final int tripId;
   final String driverName;
   final String fromCity;
   final String toCity;
@@ -15,6 +23,7 @@ class JourneyCard extends StatelessWidget {
 
   const JourneyCard({
     super.key,
+    required this.tripId,
     required this.driverName,
     required this.fromCity,
     required this.toCity,
@@ -237,11 +246,35 @@ class JourneyCard extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Book Button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: isBookable ? () {} : null,
+              onPressed: isBookable
+                  ? () {
+                      final historyCubit = context.read<HistoryCubit>();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MultiBlocProvider(
+                            providers: [
+                              BlocProvider(
+                                create: (context) => BookingCubit(
+                                  apiService: BookingApiService(api: DioConsumer(dio: Dio())),
+                                ),
+                              ),
+                              BlocProvider.value(value: historyCubit),
+                            ],
+                            child: BookingScreen(
+                              tripId: tripId,
+                              pricePerSeat: pricePerSet,
+                              fromCity: fromCity,
+                              toCity: toCity,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: isBookable
                     ? const Color(0xFF0D32B3)

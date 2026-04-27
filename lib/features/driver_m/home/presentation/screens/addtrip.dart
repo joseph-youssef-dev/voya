@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:voya/features/driver_m/Theme/colors/app_colors.dart';
+import 'package:voya/core/shared/custom_header.dart';
 import 'package:voya/features/driver_m/home/presentation/widgets/home_widgets.dart';
-import 'package:voya/features/driver_m/home/presentation/screens/app_bar_screen.dart';
-import 'package:voya/features/driver_m/home/presentation/screens/add_new_trip.dart';
 
 class CreateTrip extends StatelessWidget {
   const CreateTrip({super.key});
@@ -10,107 +8,87 @@ class CreateTrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Column(
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              AppBarScreen(
-                text1: 'My Trips',
-                text2: 'Manage your scheduled trips',
-              ),
+      backgroundColor: const Color(0xFFF6F8FE),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const CustomHeader(title: 'Driver Hub'),
+            const SizedBox(height: 30),
 
-              Positioned(
-                bottom: -28,
-                left: 30,
-                right: 30,
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => AddNewTripPage()),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [AppColors.primaryLight, AppColors.primary],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.primary.withValues(alpha: 0.3),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_circle_outline,
-                          color: AppColors.white,
-                          size: 24,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          "Add New Trip",
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 40),
-
-          Expanded(
-            child: ListView(
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              children: [
-                SizedBox(height: 15),
-                Center(
-                  child: Text(
-                    "Waiting Trips",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              child: Row(
+                children: [
+                  const Text(
+                    "SCHEDULED JOURNEYS",
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w900,
+                      color: Color(0xFF5A6B87),
+                      letterSpacing: 1.2,
+                    ),
                   ),
-                ),
-                WaitingTripCard(),
-                SizedBox(height: 15),
-                WaitingTripCard(),
-                SizedBox(height: 15),
-                WaitingTripCard(),
-                SizedBox(height: 25),
-                Center(
-                  child: Text(
-                    "Completed Trips",
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Divider(color: Color(0xFFEBEFF5), thickness: 2),
                   ),
-                ),
-                SizedBox(height: 15),
-                CompletedTripCard(
-                  origin: 'cairo',
-                  destination: 'alexandria',
-                  price: '\$50',
-                  passengers: '2',
-                ),
-                SizedBox(height: 15),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 10),
+
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
+                children: [
+                  const _SectionTitle(title: "Waiting Trips"),
+                  const WaitingTripCard(),
+                  const SizedBox(height: 12),
+                  const WaitingTripCard(),
+                  const SizedBox(height: 25),
+                  const _SectionTitle(title: "Completed History"),
+                  CompletedTripCard(
+                    origin: 'Cairo',
+                    destination: 'Alexandria',
+                    price: '${50.00}',
+                    passengers: '2',
+                  ),
+                  const SizedBox(height: 12),
+                  CompletedTripCard(
+                    origin: 'Giza',
+                    destination: 'Hurghada',
+                    price: '${120.00}',
+                    passengers: '4',
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  const _SectionTitle({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12, left: 4),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w900,
+          color: Color(0xFF1E2432),
+        ),
       ),
     );
   }

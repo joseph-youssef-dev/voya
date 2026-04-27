@@ -9,6 +9,8 @@ import 'package:voya/features/passenger/history/presentation/screens/passenger_h
 import 'package:voya/features/passenger/home/presentation/screens/passenger_home_screen.dart';
 import 'package:voya/features/passenger/profile/presentation/screens/passenger_profile_screen.dart';
 import 'package:voya/features/passenger/search/presentation/screens/passenger_search_screen.dart';
+import 'package:voya/features/passenger/history/logic/cubit/history_cubit.dart';
+import 'package:voya/features/passenger/history/data/api/history_api_service.dart';
 
 class PassengerMainScreen extends StatefulWidget {
   const PassengerMainScreen({super.key});
@@ -29,16 +31,22 @@ class _PassengerMainScreenState extends State<PassengerMainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => HomeCubit(
-        apiService: HomeApiService(api: DioConsumer(dio: Dio())),
-      )..fetchAllTrips(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => HomeCubit(
+            apiService: HomeApiService(api: DioConsumer(dio: Dio())),
+          )..fetchAllTrips(),
+        ),
+        BlocProvider(
+          create: (context) => HistoryCubit(
+            apiService: HistoryApiService(api: DioConsumer(dio: Dio())),
+          )..fetchMyTrips(),
+        ),
+      ],
       child: Scaffold(
         backgroundColor: const Color(0xFFF6F8FE),
-        body: IndexedStack(
-          index: selectedIndex,
-          children: screens,
-        ),
+        body: IndexedStack(index: selectedIndex, children: screens),
         bottomNavigationBar: SafeArea(
           child: Container(
             margin: const EdgeInsets.all(20),

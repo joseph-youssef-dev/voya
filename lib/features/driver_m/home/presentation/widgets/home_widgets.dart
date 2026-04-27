@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-// --- from completed_trip_card.dart ---
-
 class CompletedTripCard extends StatelessWidget {
   final String origin;
   final String destination;
@@ -19,48 +17,211 @@ class CompletedTripCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.blue.shade100, width: 1.5),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEBF1FF),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(Icons.check_circle, color: Color(0xFF0D32B3), size: 24),
+          ),
+          const SizedBox(width: 16),
           Expanded(
-            child: Text(
-              "$origin ---- $destination",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                fontStyle: FontStyle.italic,
-                color: Colors.black87,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "$origin to $destination",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF1E2432),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "$passengers Passengers · Completed",
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: Color(0xFF5A6B87),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Text(
+            price,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFF0D32B3),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WaitingTripCard extends StatelessWidget {
+  const WaitingTripCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                price,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFEBF1FF),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  "UPCOMING",
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    color: Color(0xFF0D32B3),
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
-              Text(
-                "$passengers passenger",
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF5A6B87)),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                  const SizedBox(width: 12),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.delete_outline, size: 20, color: Colors.redAccent),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  const SizedBox(height: 4),
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: const Color(0xFF0D32B3), width: 2),
+                    ),
+                  ),
+                  Container(width: 1.5, height: 25, color: const Color(0xFFF1F4F9)),
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF0D32B3),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "New York",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF1E2432)),
+                    ),
+                    SizedBox(height: 14),
+                    Text(
+                      "Boston",
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF1E2432)),
+                    ),
+                  ],
+                ),
+              ),
+              const Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    "\$150.00",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF0D32B3)),
+                  ),
+                  Text(
+                    "per seat",
+                    style: TextStyle(fontSize: 11, color: Color(0xFF5A6B87), fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          const Divider(color: Color(0xFFF1F4F9), thickness: 1.5),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today_outlined, size: 14, color: Color(0xFF5A6B87)),
+                  const SizedBox(width: 6),
+                  const Text(
+                    "Feb 20 · 10:30 AM",
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF5A6B87)),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(Icons.people_outline, size: 16, color: Color(0xFF5A6B87)),
+                  const SizedBox(width: 6),
+                  const Text(
+                    "4 seats available",
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF5A6B87)),
+                  ),
+                ],
               ),
             ],
           ),
@@ -69,116 +230,6 @@ class CompletedTripCard extends StatelessWidget {
     );
   }
 }
-
-// --- from waiting_trip_card.dart ---
-
-class WaitingTripCard extends StatelessWidget {
-  const WaitingTripCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.circle, size: 12, color: Colors.blue),
-                        SizedBox(width: 8),
-                        Text("New York"),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 4),
-                      child: Text("|"),
-                    ),
-                    Row(
-                      children: [
-                        Icon(Icons.circle, size: 12, color: Colors.blue),
-                        SizedBox(width: 8),
-                        Text("Boston"),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.edit, color: Colors.blue),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const Divider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.calendar_today, size: 16),
-                    SizedBox(width: 5),
-                    Text("Feb 20"),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.attach_money, size: 16),
-                    SizedBox(width: 5),
-                    Text("\$150"),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.people, size: 20),
-                      SizedBox(width: 5),
-                      Text("4 Available seats"),
-                    ],
-                  ),
-                  Text(
-                    "\$600",
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// --- from date_trime_helper.dart ---
 
 class DateTimeHelper {
   static Future<void> pickDate({
@@ -193,15 +244,14 @@ class DateTimeHelper {
     );
 
     if (picked != null) {
-      controller.text = "${picked.day}/${picked.month}/${picked.year}";
+      controller.text = "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
     }
   }
 
-  /// ⏰ TIME PICKER
   static Future<void> pickTime({
     required BuildContext context,
     required TextEditingController controller,
-    required Null Function() onPicked,
+    required VoidCallback onPicked,
   }) async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -214,7 +264,7 @@ class DateTimeHelper {
       final period = picked.period == DayPeriod.am ? "AM" : "PM";
 
       controller.text = "$hour:$minute $period";
+      onPicked();
     }
   }
 }
-
