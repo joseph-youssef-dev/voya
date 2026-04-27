@@ -169,7 +169,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: isSelected ? 0.08 : 0.04),
+              color: Colors.black.withOpacity(isSelected ? 0.08 : 0.04),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -215,7 +215,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                     fontWeight: FontWeight.bold,
                     color: isSelected
                         ? const Color(0xFF0D32B3)
-                        : const Color(0xFF0D32B3).withValues(alpha: 0.8),
+                        : const Color(0xFF0D32B3).withOpacity(0.8),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -224,7 +224,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                   size: 16,
                   color: isSelected
                       ? const Color(0xFF0D32B3)
-                      : const Color(0xFF0D32B3).withValues(alpha: 0.8),
+                      : const Color(0xFF0D32B3).withOpacity(0.8),
                 ),
               ],
             ),

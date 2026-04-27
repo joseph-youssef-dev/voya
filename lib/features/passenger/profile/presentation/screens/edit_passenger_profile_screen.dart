@@ -1,12 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:voya/core/shared/custom_header.dart';
 import 'package:voya/features/passenger/profile/data/models/passenger_profile_model.dart';
 import 'package:voya/features/passenger/profile/logic/cubit/profile_cubit.dart';
 import 'package:voya/features/passenger/profile/logic/cubit/profile_state.dart';
-import 'package:flutter/foundation.dart';
+
 
 class EditPassengerProfileScreen extends StatefulWidget {
   final PassengerProfileModel profile;
@@ -23,22 +21,24 @@ class EditPassengerProfileScreen extends StatefulWidget {
       _EditPassengerProfileScreenState();
 }
 
-class _EditPassengerProfileScreenState extends State<EditPassengerProfileScreen> {
+class _EditPassengerProfileScreenState
+    extends State<EditPassengerProfileScreen> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _birthDateController;
   late TextEditingController _phoneController;
   late TextEditingController _townController;
 
-  File? _imageFile;
-  final ImagePicker _picker = ImagePicker();
-
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController(text: widget.profile.firstName);
+    _firstNameController = TextEditingController(
+      text: widget.profile.firstName,
+    );
     _lastNameController = TextEditingController(text: widget.profile.lastName);
-    _birthDateController = TextEditingController(text: widget.profile.birthDate);
+    _birthDateController = TextEditingController(
+      text: widget.profile.birthDate,
+    );
     _phoneController = TextEditingController(text: widget.profile.phone);
     _townController = TextEditingController(text: widget.profile.town);
   }
@@ -51,15 +51,6 @@ class _EditPassengerProfileScreenState extends State<EditPassengerProfileScreen>
     _phoneController.dispose();
     _townController.dispose();
     super.dispose();
-  }
-
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
   }
 
   @override
@@ -77,39 +68,31 @@ class _EditPassengerProfileScreenState extends State<EditPassengerProfileScreen>
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      GestureDetector(
-                        onTap: _pickImage,
-                        child: Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.grey[200],
-                                border: Border.all(
-                                  color: const Color(0xFF0D32B3),
-                                  width: 2,
-                                ),
-                              ),
-                              child: ClipOval(
-                                child: _imageFile != null
-                                    ? Image.file(_imageFile!, fit: BoxFit.cover)
-                                    : (widget.profile.profileImage != null
-                                        ? Image.network(widget.profile.profileImage!, fit: BoxFit.cover)
-                                        : const Icon(Icons.person, size: 50, color: Colors.grey)),
-                              ),
+                      const SizedBox(height: 10),
+                      Center(
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[200],
+                            border: Border.all(
+                              color: const Color(0xFF0D32B3),
+                              width: 2,
                             ),
-                            Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF0D32B3),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.camera_alt, color: Colors.white, size: 16),
-                            ),
-                          ],
+                          ),
+                          child: ClipOval(
+                            child: widget.profile.profileImage != null
+                                ? Image.network(
+                                    widget.profile.profileImage!,
+                                    fit: BoxFit.cover,
+                                  )
+                                : const Icon(
+                                    Icons.person,
+                                    size: 50,
+                                    color: Colors.grey,
+                                  ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 30),
@@ -135,7 +118,9 @@ class _EditPassengerProfileScreenState extends State<EditPassengerProfileScreen>
                             );
                             Navigator.pop(context);
                           } else if (state is ProfileUpdateFailure) {
-                            debugPrint('❌ Update Failure: ${state.errorMessage}');
+                            debugPrint(
+                              '❌ Update Failure: ${state.errorMessage}',
+                            );
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
@@ -152,7 +137,9 @@ class _EditPassengerProfileScreenState extends State<EditPassengerProfileScreen>
                         },
                         builder: (context, state) {
                           if (state is ProfileUpdateLoading) {
-                            return const CircularProgressIndicator(color: Color(0xFF0D32B3));
+                            return const CircularProgressIndicator(
+                              color: Color(0xFF0D32B3),
+                            );
                           }
                           return SizedBox(
                             width: double.infinity,
@@ -165,14 +152,13 @@ class _EditPassengerProfileScreenState extends State<EditPassengerProfileScreen>
                                 ),
                               ),
                               onPressed: () {
-                                widget.cubit.updateProfile(
-                                  firstName: _firstNameController.text,
-                                  lastName: _lastNameController.text,
-                                  birthDate: _birthDateController.text,
-                                  phone: _phoneController.text,
-                                  town: _townController.text,
-                                  profileImagePath: _imageFile?.path,
-                                );
+                                  widget.cubit.updateProfile(
+                                    firstName: _firstNameController.text,
+                                    lastName: _lastNameController.text,
+                                    birthDate: _birthDateController.text,
+                                    phone: _phoneController.text,
+                                    town: _townController.text,
+                                  );
                               },
                               child: const Text(
                                 'Save Changes',

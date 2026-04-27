@@ -7,8 +7,15 @@ class HomeApiService {
 
   HomeApiService({required this.api});
 
-  Future<List<TripModel>> getAllTrips() async {
-    final response = await api.get(EndPoints.getAllTrips);
+  Future<List<TripModel>> getAllTrips({String? from, String? to}) async {
+    final Map<String, dynamic> queryParameters = {};
+    if (from != null && from.isNotEmpty) queryParameters['From'] = from;
+    if (to != null && to.isNotEmpty) queryParameters['To'] = to;
+
+    final response = await api.get(
+      EndPoints.getAllTrips,
+      queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
+    );
     
     if (response is Map<String, dynamic> && response.containsKey('data')) {
       final List dataList = response['data'] as List;

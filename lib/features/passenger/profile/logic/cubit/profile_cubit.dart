@@ -23,7 +23,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     required String birthDate,
     required String phone,
     required String town,
-    String? profileImagePath,
   }) async {
     emit(ProfileUpdateLoading());
     try {
@@ -33,7 +32,6 @@ class ProfileCubit extends Cubit<ProfileState> {
         birthDate: birthDate,
         phone: phone,
         town: town,
-        profileImagePath: profileImagePath,
       );
       emit(ProfileUpdateSuccess(message: "Profile updated successfully"));
       // Wait for listeners (Navigator.pop) to process before refreshing

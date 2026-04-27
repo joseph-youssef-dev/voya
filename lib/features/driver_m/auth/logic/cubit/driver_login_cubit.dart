@@ -17,7 +17,10 @@ class DriverLoginCubit extends Cubit<DriverLoginState> {
   }) async {
     emit(DriverLoginLoading());
     try {
-      final request = DriverLoginRequestModel(email: email, password: password);
+      final request = DriverLoginRequestModel(
+        email: email.trim(), 
+        password: password.trim(),
+      );
       final response = await apiService.login(request);
 
       final message = (response is Map<String, dynamic> &&
@@ -28,12 +31,19 @@ class DriverLoginCubit extends Cubit<DriverLoginState> {
       // Save token
       if (response is Map<String, dynamic> && response.containsKey('data')) {
         final data = response['data'];
-        if (data is Map<String, dynamic> && data.containsKey('token')) {
+        if (data['token'] != null) {
           await CacheHelper().saveData(key: 'token', value: data['token']);
         }
-      } else if (response is Map<String, dynamic> &&
-          response.containsKey('token')) {
-        await CacheHelper().saveData(key: 'token', value: response['token']);
+        if (data['refreshToken'] != null) {
+          await CacheHelper().saveData(key: 'refreshToken', value: data['refreshToken']);
+        }
+      } else if (response is Map<String, dynamic>) {
+        if (response['token'] != null) {
+          await CacheHelper().saveData(key: 'token', value: response['token']);
+        }
+        if (response['refreshToken'] != null) {
+          await CacheHelper().saveData(key: 'refreshToken', value: response['refreshToken']);
+        }
       }
 
       await CacheHelper().saveData(key: 'isLoggedIn', value: true);

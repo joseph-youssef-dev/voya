@@ -1,7 +1,6 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:voya/core/databases/api/api_consumer.dart';
 import 'package:voya/core/constants/end_points.dart';
-import 'package:dio/dio.dart';
 import '../models/passenger_profile_model.dart';
 
 class ProfileApiService {
@@ -29,16 +28,8 @@ class ProfileApiService {
     required String birthDate,
     required String phone,
     required String town,
-    String? profileImagePath,
   }) async {
-    debugPrint(
-      '📤 Sending update: FirstName=$firstName, LastName=$lastName, '
-      'BirthDate=$birthDate, Phone=$phone, Town=$town, '
-      'hasImage=${profileImagePath != null}',
-    );
-
-    // Always send as FormData (backend expects multipart/form-data)
-    final Map<String, dynamic> fields = {
+    final Map<String, dynamic> data = {
       'FirstName': firstName,
       'LastName': lastName,
       'BirthDate': birthDate,
@@ -46,38 +37,10 @@ class ProfileApiService {
       'Town': town,
     };
 
-    if (profileImagePath != null) {
-      fields['ProfileImage'] = await MultipartFile.fromFile(
-        profileImagePath,
-        filename: profileImagePath.split('/').last,
-      );
-    }
-
-    // Try PUT (most common for full update)
-    try {
-      final response = await api.put(
-        EndPoints.updatePassengerProfile,
-        data: fields,
-        isFormData: true, // always FormData
-      );
-      debugPrint('✅ PUT response: $response');
-      return;
-    } catch (e) {
-      debugPrint('⚠️ PUT failed: $e — trying PATCH...');
-    }
-
-    // Fallback: try PATCH
-    try {
-      final response = await api.patch(
-        EndPoints.updatePassengerProfile,
-        data: fields,
-        isFormData: true, // always FormData
-      );
-      debugPrint('✅ PATCH response: $response');
-      return;
-    } catch (e) {
-      debugPrint('❌ PATCH also failed: $e');
-      rethrow;
-    }
+    await api.put(
+      EndPoints.updatePassengerProfile,
+      data: data,
+      isFormData: true,
+    );
   }
 }

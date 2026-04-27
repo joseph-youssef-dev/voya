@@ -15,9 +15,9 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   int currentIndex = 0;
 
   final List<Widget> pages = const [
-    CreateTrip(), // Home
-    AddNewTripPage(), // Add
-    DriverProfileScreen(), // Profile
+    CreateTrip(),
+    AddNewTripPage(),
+    DriverProfileScreen(),
   ];
 
   @override
@@ -36,7 +36,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
+                color: Colors.black.withOpacity(0.05),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),

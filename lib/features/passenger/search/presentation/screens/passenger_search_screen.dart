@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voya/core/constants/app_colors.dart';
 import 'package:voya/core/shared/custom_header.dart';
-import 'package:voya/features/passenger/home/presentation/widgets/journey_list.dart';
+import 'package:voya/features/passenger/home/presentation/widgets/journey_card.dart';
+import 'package:voya/features/passenger/search/logic/cubit/search_cubit.dart';
+import 'package:voya/features/passenger/search/logic/cubit/search_state.dart';
 
 class PassengerSearchScreen extends StatefulWidget {
   const PassengerSearchScreen({super.key});
@@ -11,15 +14,43 @@ class PassengerSearchScreen extends StatefulWidget {
 }
 
 class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
-  final _fromController = TextEditingController();
-  final _toController = TextEditingController();
+  String? _selectedFrom;
+  String? _selectedTo;
   final _dateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  final List<String> _governorates = [
+    'Alexandria',
+    'Assiut',
+    'Aswan',
+    'Beheira',
+    'Beni Suef',
+    'Cairo',
+    'Dakahlia',
+    'Damietta',
+    'Fayoum',
+    'Gharbia',
+    'Giza',
+    'Ismailia',
+    'Kafr El Sheikh',
+    'Luxor',
+    'Matrouh',
+    'Menofia',
+    'Minya',
+    'New Valley',
+    'North Sinai',
+    'Port Said',
+    'Qaliubiya',
+    'Qena',
+    'Red Sea',
+    'Sharkia',
+    'Sohag',
+    'South Sinai',
+    'Suez',
+  ];
+
   @override
   void dispose() {
-    _fromController.dispose();
-    _toController.dispose();
     _dateController.dispose();
     super.dispose();
   }
@@ -41,7 +72,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.04),
+                  color: Colors.black.withOpacity(0.04),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -52,25 +83,41 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildInputField(
-                    controller: _fromController,
-                    icon: Icons.my_location,
+                  _buildDropdownField(
+                    value: _selectedFrom,
                     hint: "From (e.g. Cairo)",
+                    icon: Icons.my_location,
+                    items: _governorates
+                        .where((city) => city != _selectedTo)
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedFrom = value;
+                      });
+                    },
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Please enter departure location";
+                      if (value == null || value.isEmpty) {
+                        return "Please select departure location";
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 12),
-                  _buildInputField(
-                    controller: _toController,
-                    icon: Icons.location_on,
+                  _buildDropdownField(
+                    value: _selectedTo,
                     hint: "To (e.g. Alexandria)",
+                    icon: Icons.location_on,
+                    items: _governorates
+                        .where((city) => city != _selectedFrom)
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedTo = value;
+                      });
+                    },
                     validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Please enter destination";
+                      if (value == null || value.isEmpty) {
+                        return "Please select destination";
                       }
                       return null;
                     },
@@ -111,25 +158,43 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                   const SizedBox(height: 16),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {}
+                    child: BlocBuilder<SearchCubit, SearchState>(
+                      builder: (context, state) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState?.validate() ?? false) {
+                              context.read<SearchCubit>().searchTrips(
+                                from: _selectedFrom!,
+                                to: _selectedTo!,
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryColor,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: state is SearchLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  "Search",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        );
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                      ),
-                      child: const Text(
-                        "Search",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.white,
-                        ),
-                      ),
                     ),
                   ),
                 ],
@@ -164,56 +229,134 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                     ),
                   ],
                 ),
-                const Spacer(),
-                PopupMenuButton<String>(
-                  color: const Color(0xFFEBF1FF),
-                  onSelected: (value) {},
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  itemBuilder: (BuildContext context) =>
-                      <PopupMenuEntry<String>>[
-                        const PopupMenuItem<String>(
-                          value: 'highest',
-                          child: Text('Highest Price'),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: 'lowest',
-                          child: Text('Lowest Price'),
-                        ),
-                      ],
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEBF1FF),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.tune, size: 16, color: Color(0xFF0D32B3)),
-                        SizedBox(width: 8),
-                        Text(
-                          "Filters",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 13,
-                            color: Color(0xFF0D32B3),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
           const SizedBox(height: 15),
-          const Expanded(child: JourneyList()),
+          Expanded(
+            child: BlocBuilder<SearchCubit, SearchState>(
+              builder: (context, state) {
+                if (state is SearchInitial) {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search, size: 64, color: Color(0xFFCBD5E1)),
+                        SizedBox(height: 16),
+                        Text(
+                          "Enter search details to find a trip",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF94A3B8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else if (state is SearchLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                    ),
+                  );
+                } else if (state is SearchFailure) {
+                  return Center(
+                    child: Text(
+                      state.errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+                } else if (state is SearchSuccess) {
+                  final trips = state.trips;
+                  if (trips.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No trips found for this route.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF94A3B8),
+                        ),
+                      ),
+                    );
+                  }
+                  return ListView.separated(
+                    padding: const EdgeInsets.all(20),
+                    itemCount: trips.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 16),
+                    itemBuilder: (context, index) {
+                      final trip = trips[index];
+                      return JourneyCard(
+                        tripId: trip.id,
+                        driverName: trip.driverName,
+                        fromCity: trip.fromCity,
+                        toCity: trip.toCity,
+                        startDate: trip.startDate,
+                        pricePerSet: trip.pricePerSet,
+                        vehicleModel: trip.vehicleModel,
+                        distance: trip.distance,
+                        duration: trip.duration,
+                        availableSeats: trip.availableSeats,
+                        features: trip.features,
+                        isBookable: trip.availableSeats > 0,
+                      );
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDropdownField({
+    required String? value,
+    required String hint,
+    required IconData icon,
+    required List<String> items,
+    required void Function(String?) onChanged,
+    String? Function(String?)? validator,
+  }) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      items: items.map((String item) {
+        return DropdownMenuItem<String>(
+          value: item,
+          child: Text(
+            item,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+        );
+      }).toList(),
+      onChanged: onChanged,
+      validator: validator,
+      icon: const Icon(
+        Icons.keyboard_arrow_down,
+        color: AppColors.primaryColor,
+      ),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(
+          color: Colors.grey.shade400,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+        prefixIcon: Icon(icon, color: AppColors.primaryColor, size: 20),
+        filled: true,
+        fillColor: const Color(0xFFF1F4F9),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 16,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }

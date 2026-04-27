@@ -10,6 +10,7 @@ import 'package:voya/features/passenger/auth/presentation/screens/passenger_logi
 import 'package:voya/features/passenger/auth/data/api/register_api_service.dart';
 import 'package:voya/features/passenger/auth/logic/cubit/register_cubit.dart';
 import 'package:voya/features/passenger/auth/logic/cubit/register_state.dart';
+import 'package:voya/features/shared_auth/presentation/screens/otp_screen.dart';
 
 class PassengerRegisterScreen extends StatefulWidget {
   const PassengerRegisterScreen({super.key});
@@ -62,7 +63,7 @@ class _PassengerRegisterScreenState extends State<PassengerRegisterScreen> {
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.04),
+                      color: Colors.black.withOpacity(0.04),
                       blurRadius: 20,
                       offset: const Offset(0, 10),
                     ),
@@ -202,7 +203,10 @@ class _PassengerRegisterScreenState extends State<PassengerRegisterScreen> {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const PassengerLoginScreen(),
+                                builder: (context) => OtpScreen(
+                                  email: _emailController.text.trim(),
+                                  nextScreen: const PassengerLoginScreen(),
+                                ),
                               ),
                             );
                           } else if (state is RegisterFailure) {

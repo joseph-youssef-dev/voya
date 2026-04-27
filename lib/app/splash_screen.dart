@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withOpacity(0.05),
                     width: 1,
                   ),
                 ),
@@ -64,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.1),
+                          color: Colors.black.withOpacity(0.1),
                           blurRadius: 20,
                           offset: const Offset(0, 10),
                         ),
@@ -109,10 +109,10 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 30),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.08),
+                        color: Colors.white.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.1),
+                          color: Colors.white.withOpacity(0.1),
                           width: 1,
                         ),
                       ),
@@ -144,7 +144,7 @@ class _SplashScreenState extends State<SplashScreen> {
                                   child: Container(
                                     height: 4,
                                     decoration: BoxDecoration(
-                                      color: Colors.white.withValues(alpha: 0.2),
+                                      color: Colors.white.withOpacity(0.2),
                                       borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),

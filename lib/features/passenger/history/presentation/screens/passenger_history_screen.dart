@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dio/dio.dart';
 import 'package:voya/core/constants/app_colors.dart';
-import 'package:voya/core/databases/api/dio_consumer.dart';
 import 'package:voya/core/shared/custom_header.dart';
-import 'package:voya/features/passenger/history/data/api/history_api_service.dart';
 import 'package:voya/features/passenger/history/data/models/my_trip_model.dart';
 import 'package:voya/features/passenger/history/logic/cubit/history_cubit.dart';
 import 'package:voya/features/passenger/history/logic/cubit/history_state.dart';
@@ -160,7 +157,7 @@ class _MyTripCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),

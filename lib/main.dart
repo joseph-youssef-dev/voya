@@ -6,7 +6,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await CacheHelper().init();
-  await CacheHelper().clearData();
+  // Session persistence enabled
+
+
 
   runApp(const Voya());
 }

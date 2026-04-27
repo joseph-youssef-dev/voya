@@ -95,8 +95,30 @@ class _DriverLoginScreenState extends State<DriverLoginScreen> {
                           isPassword: true,
                           controller: _passwordController,
                         ),
-                        const SizedBox(height: 30),
-                        
+                        // TODO: Uncomment when forget password is ready
+                        // Align(
+                        //   alignment: Alignment.centerRight,
+                        //   child: TextButton(
+                        //     onPressed: () {
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => const ForgetPasswordScreen(
+                        //             nextScreenAfterReset: DriverLoginScreen(),
+                        //           ),
+                        //         ),
+                        //       );
+                        //     },
+                        //     child: const Text(
+                        //       "Forget Password?",
+                        //       style: TextStyle(
+                        //         color: Color(0xFF0D32B3),
+                        //         fontWeight: FontWeight.w700,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        const SizedBox(height: 10),
                         BlocConsumer<DriverLoginCubit, DriverLoginState>(
                           listener: (context, state) {
                             if (state is DriverLoginSuccess) {

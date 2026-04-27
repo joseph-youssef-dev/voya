@@ -8,6 +8,7 @@ class EndPoints {
   static const String verfiyAccount = "/Auth/verify-email-otp";
   static const String forgetPassword = "/Auth/forget-password";
   static const String resetPassword = "/Auth/reset-password";
+  static const String refreshToken = "/Auth/refresh-token";
   static const String logout = "/Auth/logout";
 
   /// trip endpoints

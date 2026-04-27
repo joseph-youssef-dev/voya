@@ -11,6 +11,7 @@ import 'package:voya/features/driver_m/auth/presentation/screens/driver_login_sc
 import 'package:voya/features/driver_m/auth/data/api/driver_register_api_service.dart';
 import 'package:voya/features/driver_m/auth/logic/cubit/driver_register_cubit.dart';
 import 'package:voya/features/driver_m/auth/logic/cubit/driver_register_state.dart';
+import 'package:voya/features/shared_auth/presentation/screens/otp_screen.dart';
 
 class DriverRegisterScreen extends StatefulWidget {
   const DriverRegisterScreen({super.key});
@@ -364,7 +365,10 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const DriverLoginScreen(),
+                                  builder: (context) => OtpScreen(
+                                    email: _emailController.text.trim(),
+                                    nextScreen: const DriverLoginScreen(),
+                                  ),
                                 ),
                               );
                             } else if (state is DriverRegisterFailure) {

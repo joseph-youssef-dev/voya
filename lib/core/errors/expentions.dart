@@ -62,7 +62,7 @@ class UnknownException extends ServerException {
 }
 
 void handleDioException(DioException e) {
-  ErrorModel _makeError(String fallback) {
+  ErrorModel makeError(String fallback) {
     try {
       if (e.response?.data is Map<String, dynamic>) {
         return ErrorModel.fromJson(e.response!.data);
@@ -73,32 +73,32 @@ void handleDioException(DioException e) {
 
   switch (e.type) {
     case DioExceptionType.connectionError:
-      throw ConnectionErrorException(_makeError('Connection error'));
+      throw ConnectionErrorException(makeError('Connection error'));
     case DioExceptionType.badCertificate:
-      throw BadCertificateException(_makeError('Bad certificate'));
+      throw BadCertificateException(makeError('Bad certificate'));
     case DioExceptionType.connectionTimeout:
-      throw ConnectionTimeoutException(_makeError('Connection timeout'));
+      throw ConnectionTimeoutException(makeError('Connection timeout'));
     case DioExceptionType.receiveTimeout:
-      throw ReceiveTimeoutException(_makeError('Receive timeout'));
+      throw ReceiveTimeoutException(makeError('Receive timeout'));
     case DioExceptionType.sendTimeout:
-      throw SendTimeoutException(_makeError('Send timeout'));
+      throw SendTimeoutException(makeError('Send timeout'));
     case DioExceptionType.badResponse:
       switch (e.response?.statusCode) {
         case 400:
-          throw BadResponseException(_makeError('Bad request'));
+          throw BadResponseException(makeError('Bad request'));
         case 401:
-          throw UnauthorizedException(_makeError('Unauthorized'));
+          throw UnauthorizedException(makeError('Unauthorized'));
         case 403:
-          throw ForbiddenException(_makeError('Forbidden'));
+          throw ForbiddenException(makeError('Forbidden'));
         case 404:
-          throw NotFoundException(_makeError('Not found'));
+          throw NotFoundException(makeError('Not found'));
         case 409:
-          throw CofficientException(_makeError('Conflict'));
+          throw CofficientException(makeError('Conflict'));
         case 504:
-          throw BadResponseException(_makeError('Gateway timeout'));
+          throw BadResponseException(makeError('Gateway timeout'));
         default:
           throw BadResponseException(
-            _makeError('Server error: ${e.response?.statusCode}'),
+            makeError('Server error: ${e.response?.statusCode}'),
           );
       }
     case DioExceptionType.cancel:

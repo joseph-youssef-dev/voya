@@ -11,6 +11,7 @@ import 'package:voya/features/passenger/profile/presentation/screens/passenger_p
 import 'package:voya/features/passenger/search/presentation/screens/passenger_search_screen.dart';
 import 'package:voya/features/passenger/history/logic/cubit/history_cubit.dart';
 import 'package:voya/features/passenger/history/data/api/history_api_service.dart';
+import 'package:voya/features/passenger/search/logic/cubit/search_cubit.dart';
 
 class PassengerMainScreen extends StatefulWidget {
   const PassengerMainScreen({super.key});
@@ -43,6 +44,11 @@ class _PassengerMainScreenState extends State<PassengerMainScreen> {
             apiService: HistoryApiService(api: DioConsumer(dio: Dio())),
           )..fetchMyTrips(),
         ),
+        BlocProvider(
+          create: (context) => SearchCubit(
+            apiService: HomeApiService(api: DioConsumer(dio: Dio())),
+          ),
+        ),
       ],
       child: Scaffold(
         backgroundColor: const Color(0xFFF6F8FE),
@@ -55,7 +61,7 @@ class _PassengerMainScreenState extends State<PassengerMainScreen> {
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
+                  color: Colors.black.withOpacity(0.05),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
