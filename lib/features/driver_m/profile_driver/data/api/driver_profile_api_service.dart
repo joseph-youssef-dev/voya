@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voya/core/databases/api/api_consumer.dart';
 import 'package:voya/core/constants/end_points.dart';
-import 'package:voya/core/databases/cache/cache_helper.dart';
 import '../models/driver_profile_model.dart';
 
 class DriverProfileApiService {

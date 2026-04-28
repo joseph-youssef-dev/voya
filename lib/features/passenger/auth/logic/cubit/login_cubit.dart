@@ -43,11 +43,11 @@ class LoginCubit extends Cubit<LoginState> {
       }
 
       final message =
-          (response is Map<String, dynamic> && response.containsKey('message'))
+          response.containsKey('message')
           ? response['message']
           : 'Login Successful';
 
-      if (response is Map<String, dynamic> && response.containsKey('data')) {
+      if (response.containsKey('data')) {
         final data = response['data'];
         if (data['token'] != null) {
           await CacheHelper().saveData(key: 'token', value: data['token']);
@@ -58,7 +58,7 @@ class LoginCubit extends Cubit<LoginState> {
             value: data['refreshToken'],
           );
         }
-      } else if (response is Map<String, dynamic>) {
+      } else {
         if (response['token'] != null) {
           await CacheHelper().saveData(key: 'token', value: response['token']);
         }
