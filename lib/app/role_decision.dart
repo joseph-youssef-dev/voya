@@ -1,3 +1,5 @@
+// جوزيف
+
 import 'package:flutter/material.dart';
 import 'package:voya/core/enums/role_enum.dart';
 
@@ -234,3 +236,165 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     );
   }
 }
+
+// مارينا
+
+// import 'package:flutter/material.dart';
+// import 'package:voya/core/enums/role_enum.dart';
+// import 'package:voya/features/driver_m/Theme/colors/app_colors.dart';
+// import 'package:voya/features/driver_m/onboarding/presentation/widgets/onboarding_widgets.dart';
+
+// class RoleSelectionScreen extends StatefulWidget {
+//   final Function(UserRole) onSelect;
+
+//   const RoleSelectionScreen({super.key, required this.onSelect});
+
+//   @override
+//   State<RoleSelectionScreen> createState() => _RoleSelectionPageState();
+// }
+
+// class _RoleSelectionPageState extends State<RoleSelectionScreen> {
+//   UserRole? selectedRole;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: ColorGradient(
+//         child: Center(
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 24),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 const ImageBus(),
+//                 const SizedBox(height: 20),
+
+//                 const Text(
+//                   "Welcome to Voya",
+//                   style: TextStyle(
+//                     fontSize: 35,
+//                     fontFamily: 'Lobster',
+//                     fontWeight: FontWeight.bold,
+//                     color: AppColors.white,
+//                   ),
+//                 ),
+
+//                 const SizedBox(height: 10),
+
+//                 const Text(
+//                   "Choose your role to continue",
+//                   style: TextStyle(color: AppColors.white),
+//                 ),
+
+//                 const SizedBox(height: 30),
+
+//                 /// Passenger
+//                 _buildRoleCard(
+//                   role: UserRole.passenger,
+//                   icon: Icons.people,
+//                   title: "I’m a Passenger",
+//                   subtitle: "Find and book rides",
+//                   color: AppColors.iconBackground,
+//                 ),
+
+//                 const SizedBox(height: 25),
+
+//                 /// Driver
+//                 _buildRoleCard(
+//                   role: UserRole.driver,
+//                   icon: Icons.local_taxi,
+//                   title: "I’m a Driver",
+//                   subtitle: "Offer rides and earn",
+//                   color: AppColors.primary,
+//                 ),
+
+//                 const SizedBox(height: 40),
+
+//                 /// Continue Button
+//                 ElevatedButton(
+//                   onPressed: () {
+//                     if (selectedRole != null) {
+//                       widget.onSelect(selectedRole!);
+//                     } else {
+//                       ScaffoldMessenger.of(context).showSnackBar(
+//                         const SnackBar(
+//                           content: Text("Please select a role first"),
+//                         ),
+//                       );
+//                     }
+//                   },
+//                   style: ElevatedButton.styleFrom(
+//                     backgroundColor: AppColors.white,
+//                     foregroundColor: AppColors.primary,
+//                     minimumSize: const Size(double.infinity, 55),
+//                     shape: RoundedRectangleBorder(
+//                       borderRadius: BorderRadius.circular(16),
+//                     ),
+//                   ),
+//                   child: const Text(
+//                     "Continue",
+//                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget _buildRoleCard({
+//     required UserRole role,
+//     required IconData icon,
+//     required String title,
+//     required String subtitle,
+//     required Color color,
+//   }) {
+//     final bool isSelected = selectedRole == role;
+
+//     return GestureDetector(
+//       onTap: () {
+//         setState(() {
+//           selectedRole = role;
+//         });
+//       },
+//       child: Container(
+//         padding: const EdgeInsets.all(20),
+//         decoration: BoxDecoration(
+//           color: Colors.white.withOpacity(0.1),
+//           borderRadius: BorderRadius.circular(20),
+//           border: Border.all(
+//             color: isSelected ? Colors.white : Colors.transparent,
+//             width: 2,
+//           ),
+//         ),
+//         child: Row(
+//           children: [
+//             Container(
+//               padding: const EdgeInsets.all(12),
+//               decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+//               child: Icon(icon, color: Colors.white),
+//             ),
+//             const SizedBox(width: 20),
+
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   title,
+//                   style: const TextStyle(
+//                     color: AppColors.white,
+//                     fontSize: 18,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//                 Text(subtitle, style: const TextStyle(color: AppColors.white)),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
