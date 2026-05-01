@@ -238,7 +238,7 @@ class TripForm extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: value.isEmpty ? null : value,
+          initialValue: value.isEmpty ? null : value,
           icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF0D32B3)),
           decoration: InputDecoration(
             hintText: "Select City",
@@ -285,7 +285,7 @@ class TripForm extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<int>(
-          value: value,
+          initialValue: value,
           icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF0D32B3)),
           decoration: InputDecoration(
             hintText: "Select Your Vehicle",

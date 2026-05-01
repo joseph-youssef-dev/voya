@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:dio/dio.dart';
-import 'package:voya/core/databases/api/dio_consumer.dart';
 import 'package:voya/core/shared/custom_header.dart';
-import 'package:voya/features/driver_m/home/data/api/trip_api_service.dart';
 import 'package:voya/features/driver_m/home/logic/driver_home_cubit.dart';
 import 'package:voya/features/driver_m/home/logic/driver_home_state.dart';
 import 'package:voya/features/driver_m/home/logic/navigation_cubit.dart';
@@ -90,9 +86,10 @@ class CreateTrip extends StatelessWidget {
                                           ),
                                     ),
                                   ).then(
-                                    (_) => context
-                                        .read<DriverHomeCubit>()
-                                        .fetchTrips(),
+                                    (_) {
+                                      if (!context.mounted) return;
+                                      context.read<DriverHomeCubit>().fetchTrips();
+                                    },
                                   );
                                 },
                               ),

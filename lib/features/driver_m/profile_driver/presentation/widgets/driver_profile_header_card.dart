@@ -40,8 +40,12 @@ class DriverProfileHeaderCard extends StatelessWidget {
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(22),
                     child: Image.network(
-                      profile.profileImage!,
+                      profile.profileImage!.startsWith('http')
+                          ? profile.profileImage!
+                          : 'http://voya.runasp.net${profile.profileImage!.startsWith('/') ? '' : '/'}${profile.profileImage!}',
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.person, color: Colors.white, size: 44),
                     ),
                   )
                 : const Icon(Icons.person, color: Colors.white, size: 44),
@@ -61,21 +65,21 @@ class DriverProfileHeaderCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-              color: profile.status.toLowerCase() == 'active' 
-                  ? Colors.green.withValues(alpha: 0.2) 
+              color: profile.status.toLowerCase() == 'active'
+                  ? Colors.green.withValues(alpha: 0.2)
                   : Colors.red.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: profile.status.toLowerCase() == 'active' 
-                    ? Colors.green.withValues(alpha: 0.5) 
+                color: profile.status.toLowerCase() == 'active'
+                    ? Colors.green.withValues(alpha: 0.5)
                     : Colors.red.withValues(alpha: 0.5),
               ),
             ),
             child: Text(
               profile.status.toUpperCase(),
               style: TextStyle(
-                color: profile.status.toLowerCase() == 'active' 
-                    ? Colors.greenAccent 
+                color: profile.status.toLowerCase() == 'active'
+                    ? Colors.greenAccent
                     : Colors.redAccent,
                 fontSize: 10,
                 fontWeight: FontWeight.bold,

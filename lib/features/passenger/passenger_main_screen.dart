@@ -59,7 +59,7 @@ class _PassengerMainScreenState extends State<PassengerMainScreen> {
             boxShadow: [
               BoxShadow(
                 blurRadius: 25,
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 offset: const Offset(0, -5),
               )
             ],

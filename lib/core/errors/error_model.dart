@@ -11,9 +11,9 @@ class ErrorModel {
       final buffer = StringBuffer();
       errors.forEach((key, value) {
         if (value is List) {
-          buffer.writeln("${value.join(", ")}");
+          buffer.writeln(value.join(", "));
         } else {
-          buffer.writeln("$value");
+          buffer.writeln(value.toString());
         }
       });
       message = buffer.toString().trim();

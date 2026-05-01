@@ -3,40 +3,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:voya/core/shared/custom_header.dart';
-import 'package:voya/features/passenger/profile/data/models/passenger_profile_model.dart';
-import 'package:voya/features/passenger/profile/logic/cubit/profile_cubit.dart';
-import 'package:voya/features/passenger/profile/logic/cubit/profile_state.dart';class EditPassengerProfileScreen extends StatefulWidget {
-  final PassengerProfileModel profile;
-  final ProfileCubit cubit;
+import 'package:voya/features/driver_m/profile_driver/data/models/driver_profile_model.dart';
+import 'package:voya/features/driver_m/profile_driver/logic/cubit/driver_profile_cubit.dart';
+import 'package:voya/features/driver_m/profile_driver/logic/cubit/driver_profile_state.dart';
 
-  const EditPassengerProfileScreen({
+class EditDriverProfileScreen extends StatefulWidget {
+  final DriverProfileModel profile;
+  final DriverProfileCubit cubit;
+
+  const EditDriverProfileScreen({
     super.key,
     required this.profile,
     required this.cubit,
   });
 
   @override
-  State<EditPassengerProfileScreen> createState() =>
-      _EditPassengerProfileScreenState();
+  State<EditDriverProfileScreen> createState() =>
+      _EditDriverProfileScreenState();
 }
 
-class _EditPassengerProfileScreenState
-    extends State<EditPassengerProfileScreen> {
+class _EditDriverProfileScreenState extends State<EditDriverProfileScreen> {
   late TextEditingController _firstNameController;
   late TextEditingController _lastNameController;
   late TextEditingController _birthDateController;
   late TextEditingController _phoneController;
   late TextEditingController _townController;
   String? _imagePath;
+
   bool _isPickerActive = false;
 
   @override
   void initState() {
     super.initState();
-    _firstNameController = TextEditingController(
-      text: widget.profile.firstName,
-    );
-    _lastNameController = TextEditingController(text: widget.profile.lastName);
+    final names = widget.profile.fullName.trim().split(' ');
+    final firstName = names.isNotEmpty ? names.first : '';
+    final lastName = names.length > 1 ? names.sublist(1).join(' ') : '';
+
+    _firstNameController = TextEditingController(text: firstName);
+    _lastNameController = TextEditingController(text: lastName);
     _birthDateController = TextEditingController(
       text: widget.profile.birthDate.split('T')[0],
     );
@@ -83,7 +87,7 @@ class _EditPassengerProfileScreenState
                               final picker = ImagePicker();
                               final XFile? image = await picker.pickImage(
                                 source: ImageSource.gallery,
-                                imageQuality: 70,
+                                imageQuality: 70, // ضغط الصورة لتقليل حجمها وتجنب الكراش
                                 maxWidth: 800,
                                 maxHeight: 800,
                               );
@@ -169,7 +173,9 @@ class _EditPassengerProfileScreenState
                         onTap: () async {
                           DateTime? picked = await showDatePicker(
                             context: context,
-                            initialDate: DateTime.tryParse(_birthDateController.text) ?? DateTime(2000),
+                            initialDate:
+                                DateTime.tryParse(_birthDateController.text) ??
+                                DateTime(2000),
                             firstDate: DateTime(1900),
                             lastDate: DateTime.now(),
                           );
@@ -186,10 +192,9 @@ class _EditPassengerProfileScreenState
                       const SizedBox(height: 16),
                       _buildTextField('Town', _townController),
                       const SizedBox(height: 30),
-                      BlocConsumer<ProfileCubit, ProfileState>(
+                      BlocConsumer<DriverProfileCubit, DriverProfileState>(
                         listener: (context, state) {
-                          if (state is ProfileUpdateSuccess) {
-                            debugPrint('✅ Update Success: ${state.message}');
+                          if (state is DriverProfileUpdateSuccess) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(state.message),
@@ -197,10 +202,7 @@ class _EditPassengerProfileScreenState
                               ),
                             );
                             Navigator.pop(context);
-                          } else if (state is ProfileUpdateFailure) {
-                            debugPrint(
-                              '❌ Update Failure: ${state.errorMessage}',
-                            );
+                          } else if (state is DriverProfileUpdateFailure) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
@@ -211,12 +213,10 @@ class _EditPassengerProfileScreenState
                                 duration: const Duration(seconds: 5),
                               ),
                             );
-                          } else if (state is ProfileUpdateLoading) {
-                            debugPrint('⏳ Update Loading...');
                           }
                         },
                         builder: (context, state) {
-                          if (state is ProfileUpdateLoading) {
+                          if (state is DriverProfileUpdateLoading) {
                             return const CircularProgressIndicator(
                               color: Color(0xFF0D32B3),
                             );
@@ -232,15 +232,18 @@ class _EditPassengerProfileScreenState
                                 ),
                               ),
                               onPressed: () {
-                                  widget.cubit.updateProfile(
-                                    firstName: _firstNameController.text,
-                                    lastName: _lastNameController.text,
-                                    birthDate: _birthDateController.text,
-                                    phone: _phoneController.text,
-                                    town: _townController.text,
-                                    ssn: widget.profile.ssn,
-                                    profileImagePath: _imagePath,
-                                  );
+                                debugPrint(
+                                  '🛠️ Saving Profile: ${_firstNameController.text} ${_lastNameController.text}, Date: ${_birthDateController.text}, Phone: ${_phoneController.text}, Town: ${_townController.text}, Image: $_imagePath',
+                                );
+                                widget.cubit.updateProfile(
+                                  firstName: _firstNameController.text,
+                                  lastName: _lastNameController.text,
+                                  birthDate: _birthDateController.text,
+                                  phone: _phoneController.text,
+                                  town: _townController.text,
+                                  ssn: widget.profile.ssn,
+                                  profileImagePath: _imagePath,
+                                );
                               },
                               child: const Text(
                                 'Save Changes',

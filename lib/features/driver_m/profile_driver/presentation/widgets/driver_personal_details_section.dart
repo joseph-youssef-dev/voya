@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:voya/features/driver_m/profile_driver/logic/cubit/driver_profile_cubit.dart';
 import '../../data/models/driver_profile_model.dart';
+import '../screens/edit_driver_profile_screen.dart';
 
 class DriverPersonalDetailsSection extends StatelessWidget {
   final DriverProfileModel profile;
@@ -11,16 +14,49 @@ class DriverPersonalDetailsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 4, bottom: 16),
-          child: Text(
-            "PERSONAL INFORMATION",
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w900,
-              color: Color(0xFF5A6B87),
-              letterSpacing: 1.2,
-            ),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 16, right: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "PERSONAL INFORMATION",
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w900,
+                  color: Color(0xFF5A6B87),
+                  letterSpacing: 1.2,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  final cubit = context.read<DriverProfileCubit>();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditDriverProfileScreen(
+                        profile: profile,
+                        cubit: cubit,
+                      ),
+                    ),
+                  );
+                },
+                child: const Row(
+                  children: [
+                    Text(
+                      "Edit",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF0D32B3),
+                      ),
+                    ),
+                    SizedBox(width: 4),
+                    Icon(Icons.edit, size: 14, color: Color(0xFF0D32B3)),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
         Container(
@@ -38,12 +74,20 @@ class DriverPersonalDetailsSection extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _buildDetailRow(Icons.location_city_outlined, "Town", profile.town),
+              _buildDetailRow(
+                Icons.location_city_outlined,
+                "Town",
+                profile.town,
+              ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Divider(color: Color(0xFFF1F4F9), thickness: 1.5),
               ),
-              _buildDetailRow(Icons.cake_outlined, "Birth Date", profile.birthDate),
+              _buildDetailRow(
+                Icons.cake_outlined,
+                "Birth Date",
+                profile.birthDate,
+              ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 child: Divider(color: Color(0xFFF1F4F9), thickness: 1.5),
@@ -52,88 +96,6 @@ class DriverPersonalDetailsSection extends StatelessWidget {
             ],
           ),
         ),
-        if (profile.vehicles.isNotEmpty) ...[
-          const SizedBox(height: 30),
-          const Padding(
-            padding: EdgeInsets.only(left: 4, bottom: 16),
-            child: Text(
-              "VEHICLES",
-              style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w900,
-                color: Color(0xFF5A6B87),
-                letterSpacing: 1.2,
-              ),
-            ),
-          ),
-          ...profile.vehicles.map((vehicle) => Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.02),
-                      blurRadius: 15,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.directions_bus, color: Color(0xFF0D32B3)),
-                        const SizedBox(width: 12),
-                        Text(
-                          vehicle.model,
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEBF1FF),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            vehicle.color,
-                            style: const TextStyle(
-                                color: Color(0xFF0D32B3),
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      "License: ${vehicle.vehicleLicense}",
-                      style: const TextStyle(
-                        color: Color(0xFF0D32B3),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Capacity: ${vehicle.numberOfPassengers} Passengers",
-                      style: const TextStyle(color: Color(0xFF5A6B87), fontSize: 13),
-                    ),
-                    if (vehicle.features != null && vehicle.features != "None") ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        "Features: ${vehicle.features}",
-                        style: const TextStyle(color: Color(0xFF5A6B87), fontSize: 13),
-                      ),
-                    ],
-                  ],
-                ),
-              )),
-        ],
       ],
     );
   }

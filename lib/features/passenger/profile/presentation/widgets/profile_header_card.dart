@@ -20,7 +20,7 @@ class ProfileHeaderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0D32B3).withOpacity(0.2),
+            color: const Color(0xFF0D32B3).withValues(alpha: 0.2),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -40,8 +40,12 @@ class ProfileHeaderCard extends StatelessWidget {
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(22),
                     child: Image.network(
-                      profile.profileImage!,
+                      profile.profileImage!.startsWith('http')
+                          ? profile.profileImage!
+                          : 'http://voya.runasp.net${profile.profileImage!.startsWith('/') ? '' : '/'}${profile.profileImage!}',
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.person, color: Colors.white, size: 44),
                     ),
                   )
                 : const Icon(Icons.person, color: Colors.white, size: 44),
@@ -61,7 +65,7 @@ class ProfileHeaderCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
