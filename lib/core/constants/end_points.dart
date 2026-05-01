@@ -13,6 +13,8 @@ class EndPoints {
 
   /// trip endpoints
   static const String getAllTrips = "/Trip/GetAllTrips";
+  static const String createTrip = "/Trip/CreateTrip";
+  static const String updateTrip = "/Trip/UpdateTrip/{id}";
 
   /// passenger endpoints
   static const String getPassengerProfile = "/Passanger/GetProfile";

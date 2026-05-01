@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:voya/features/passenger/home/data/models/trip_model.dart';
 
 class CompletedTripCard extends StatelessWidget {
-  final String origin;
-  final String destination;
-  final String price;
-  final String passengers;
+  final TripModel trip;
 
   const CompletedTripCard({
     super.key,
-    required this.origin,
-    required this.destination,
-    required this.price,
-    required this.passengers,
+    required this.trip,
   });
 
   @override
@@ -46,7 +41,7 @@ class CompletedTripCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "$origin to $destination",
+                  "${trip.fromCity} to ${trip.toCity}",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
@@ -55,7 +50,7 @@ class CompletedTripCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "$passengers Passengers · Completed",
+                  "${trip.availableSeats} Passengers · Completed",
                   style: const TextStyle(
                     fontSize: 13,
                     color: Color(0xFF5A6B87),
@@ -66,7 +61,7 @@ class CompletedTripCard extends StatelessWidget {
             ),
           ),
           Text(
-            price,
+            "${trip.pricePerSet}",
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w900,
@@ -80,7 +75,14 @@ class CompletedTripCard extends StatelessWidget {
 }
 
 class WaitingTripCard extends StatelessWidget {
-  const WaitingTripCard({super.key});
+  final TripModel trip;
+  final VoidCallback onEdit;
+
+  const WaitingTripCard({
+    super.key,
+    required this.trip,
+    required this.onEdit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -123,15 +125,8 @@ class WaitingTripCard extends StatelessWidget {
               Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: onEdit,
                     icon: const Icon(Icons.edit_outlined, size: 20, color: Color(0xFF5A6B87)),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                  const SizedBox(width: 12),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.delete_outline, size: 20, color: Colors.redAccent),
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
                   ),
@@ -166,30 +161,30 @@ class WaitingTripCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(width: 12),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "New York",
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF1E2432)),
+                      trip.fromCity,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF1E2432)),
                     ),
-                    SizedBox(height: 14),
+                    const SizedBox(height: 14),
                     Text(
-                      "Boston",
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF1E2432)),
+                      trip.toCity,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: Color(0xFF1E2432)),
                     ),
                   ],
                 ),
               ),
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "\$150.00",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF0D32B3)),
+                    "\$${trip.pricePerSet}",
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF0D32B3)),
                   ),
-                  Text(
+                  const Text(
                     "per seat",
                     style: TextStyle(fontSize: 11, color: Color(0xFF5A6B87), fontWeight: FontWeight.w500),
                   ),
@@ -207,9 +202,9 @@ class WaitingTripCard extends StatelessWidget {
                 children: [
                   const Icon(Icons.calendar_today_outlined, size: 14, color: Color(0xFF5A6B87)),
                   const SizedBox(width: 6),
-                  const Text(
-                    "Feb 20 · 10:30 AM",
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF5A6B87)),
+                  Text(
+                    trip.startDate.split('T')[0],
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF5A6B87)),
                   ),
                 ],
               ),
@@ -217,9 +212,9 @@ class WaitingTripCard extends StatelessWidget {
                 children: [
                   const Icon(Icons.people_outline, size: 16, color: Color(0xFF5A6B87)),
                   const SizedBox(width: 6),
-                  const Text(
-                    "4 seats available",
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF5A6B87)),
+                  Text(
+                    "${trip.availableSeats} seats available",
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF5A6B87)),
                   ),
                 ],
               ),
