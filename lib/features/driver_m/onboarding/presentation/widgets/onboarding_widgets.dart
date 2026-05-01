@@ -1,50 +1,49 @@
+// //--- from color_gradient.dart ---
+import 'package:flutter/material.dart';
+import 'package:voya/features/driver_m/Theme/colors/app_colors.dart';
 
-// --- from color_gradient.dart ---
-// import 'package:flutter/material.dart';
-// import 'package:voya/features/driver_m/Theme/colors/app_colors.dart';
+class ColorGradient extends StatelessWidget {
+  const ColorGradient({super.key, required this.child});
 
-// class ColorGradient extends StatelessWidget {
-//   const ColorGradient({super.key, required this.child});
+  final Widget child;
 
-//   final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [AppColors.primary, AppColors.primaryLight],
+        ),
+      ),
+      child: child,
+    );
+  }
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       decoration: const BoxDecoration(
-//         gradient: LinearGradient(
-//           begin: Alignment.topCenter,
-//           end: Alignment.bottomCenter,
-//           colors: [AppColors.primary, AppColors.primaryLight],
-//         ),
-//       ),
-//       child: child,
-//     );
-//   }
-// }
+// //--- from image_bus.dart ---
+// // import 'package:flutter/material.dart';
 
-// --- from image_bus.dart ---
-// import 'package:flutter/material.dart';
+class ImageBus extends StatelessWidget {
+  const ImageBus({super.key});
 
-// class ImageBus extends StatelessWidget {
-//   const ImageBus({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 100,
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Image.asset("assets/images/bus.png", width: 80),
+    );
+  }
+}
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       width: 100,
-//       height: 100,
-//       decoration: BoxDecoration(
-//         color: Colors.black,
-//         borderRadius: BorderRadius.circular(10),
-//       ),
-//       child: Image.asset("assets/images/bus.png", width: 80),
-//     );
-//   }
-// }
-
-// --- from role_selection_card.dart ---
-// import 'package:flutter/material.dart';
+// //--- from role_selection_card.dart ---
+// // import 'package:flutter/material.dart';
 
 // class RoleSelectionCard extends StatelessWidget {
 //   final IconData icon;
@@ -104,4 +103,3 @@
 //     );
 //   }
 // }
-
