@@ -30,10 +30,10 @@ class CompletedTripCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFFEBF1FF),
+              color: const Color(0xFFD1FAE5),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.check_circle, color: Color(0xFF0D32B3), size: 24),
+            child: const Icon(Icons.check_circle, color: Color(0xFF10B981), size: 24),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -50,7 +50,7 @@ class CompletedTripCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "${trip.availableSeats} Passengers · Completed",
+                  "${trip.availableSeats} Available Seats · Completed",
                   style: const TextStyle(
                     fontSize: 13,
                     color: Color(0xFF5A6B87),
@@ -61,11 +61,96 @@ class CompletedTripCard extends StatelessWidget {
             ),
           ),
           Text(
-            "${trip.pricePerSet}",
+            "£${trip.pricePerSet}",
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w900,
-              color: Color(0xFF0D32B3),
+              color: Color(0xFF10B981),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RejectedTripCard extends StatelessWidget {
+  final TripModel trip;
+
+  const RejectedTripCard({
+    super.key,
+    required this.trip,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFEE2E2),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(Icons.cancel, color: Color(0xFFDC2626), size: 24),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${trip.fromCity} to ${trip.toCity}",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF1E2432),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                RichText(
+                  text: TextSpan(
+                    text: "${trip.availableSeats} Available Seats · ",
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF5A6B87),
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Inter',
+                    ),
+                    children: const [
+                      TextSpan(
+                        text: "Rejected",
+                        style: TextStyle(
+                          color: Color(0xFFDC2626),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            "£${trip.pricePerSet}",
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w900,
+              color: Color(0xFFDC2626),
             ),
           ),
         ],
@@ -181,7 +266,7 @@ class WaitingTripCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "\$${trip.pricePerSet}",
+                    "£${trip.pricePerSet}",
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF0D32B3)),
                   ),
                   const Text(
@@ -220,6 +305,17 @@ class WaitingTripCard extends StatelessWidget {
               ),
             ],
           ),
+          if (trip.details.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              trip.details,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF5A6B87),
+              ),
+            ),
+          ],
         ],
       ),
     );

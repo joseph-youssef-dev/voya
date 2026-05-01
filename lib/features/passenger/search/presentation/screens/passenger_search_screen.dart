@@ -5,6 +5,7 @@ import 'package:voya/core/shared/custom_header.dart';
 import 'package:voya/features/passenger/home/presentation/widgets/journey_card.dart';
 import 'package:voya/features/passenger/search/logic/cubit/search_cubit.dart';
 import 'package:voya/features/passenger/search/logic/cubit/search_state.dart';
+import 'package:voya/core/constants/egypt_cities.dart';
 
 class PassengerSearchScreen extends StatefulWidget {
   const PassengerSearchScreen({super.key});
@@ -19,35 +20,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
   final _dateController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  final List<String> _governorates = [
-    'Alexandria',
-    'Assiut',
-    'Aswan',
-    'Beheira',
-    'Beni Suef',
-    'Cairo',
-    'Dakahlia',
-    'Damietta',
-    'Fayoum',
-    'Gharbia',
-    'Giza',
-    'Ismailia',
-    'Kafr El Sheikh',
-    'Luxor',
-    'Matrouh',
-    'Menofia',
-    'Minya',
-    'New Valley',
-    'North Sinai',
-    'Port Said',
-    'Qaliubiya',
-    'Qena',
-    'Red Sea',
-    'Sharkia',
-    'Sohag',
-    'South Sinai',
-    'Suez',
-  ];
+  final List<String> _governorates = EgyptCities.list;
 
   @override
   void dispose() {
@@ -300,6 +273,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                         duration: trip.duration,
                         availableSeats: trip.availableSeats,
                         features: trip.features,
+                        details: trip.details,
                         isBookable: trip.availableSeats > 0,
                       );
                     },

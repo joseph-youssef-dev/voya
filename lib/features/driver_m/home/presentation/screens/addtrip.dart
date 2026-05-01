@@ -104,9 +104,17 @@ class CreateTrip extends StatelessWidget {
                             ...state.completedTrips.map(
                               (trip) => CompletedTripCard(trip: trip),
                             ),
+                            const SizedBox(height: 25),
+                          ],
+                          if (state.rejectedTrips.isNotEmpty) ...[
+                            const _SectionTitle(title: "Rejected Trips"),
+                            ...state.rejectedTrips.map(
+                              (trip) => RejectedTripCard(trip: trip),
+                            ),
                           ],
                           if (state.waitingTrips.isEmpty &&
-                              state.completedTrips.isEmpty)
+                              state.completedTrips.isEmpty &&
+                              state.rejectedTrips.isEmpty)
                             const Center(child: Text("No trips found")),
                           const SizedBox(height: 20),
                         ],

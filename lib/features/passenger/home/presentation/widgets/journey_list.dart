@@ -52,6 +52,7 @@ class JourneyList extends StatelessWidget {
                 duration: trip.duration,
                 availableSeats: trip.availableSeats,
                 features: trip.features,
+                details: trip.details,
                 isBookable: trip.availableSeats > 0,
               );
             },

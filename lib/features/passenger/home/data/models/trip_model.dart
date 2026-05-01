@@ -11,6 +11,7 @@ class TripModel {
   final double distance;
   final int availableSeats;
   final List<dynamic> features;
+  final String status;
 
   final int vechileId;
 
@@ -27,6 +28,7 @@ class TripModel {
     required this.distance,
     required this.availableSeats,
     required this.features,
+    required this.status,
     required this.vechileId,
   });
 
@@ -44,6 +46,7 @@ class TripModel {
       distance: (json['distance'] ?? json['Distance'] ?? 0.0).toDouble(),
       availableSeats: json['availableSeats'] ?? json['AvailableSeats'] ?? json['numberOfPassangers'] ?? 0,
       features: json['features'] ?? json['Features'] ?? [],
+      status: json['status'] ?? json['Status'] ?? 'Pending',
       vechileId: json['vechileId'] ?? json['VechileID'] ?? json['vechileID'] ?? 0,
     );
   }

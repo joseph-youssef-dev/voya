@@ -7,36 +7,9 @@ import 'package:voya/features/driver_m/home/presentation/widgets/trip_widgets.da
 import 'package:voya/features/driver_m/profile_driver/data/models/driver_profile_model.dart';
 import '../../logic/add_trip_cubit.dart';
 import '../../logic/add_trip_state.dart';
+import 'package:voya/core/constants/egypt_cities.dart';
 
-const List<String> egyptCities = [
-  "Cairo",
-  "Alexandria",
-  "Giza",
-  "Dakahlia",
-  "Red Sea",
-  "Beheira",
-  "Fayoum",
-  "Gharbia",
-  "Ismailia",
-  "Menofia",
-  "Minya",
-  "Qalyubia",
-  "New Valley",
-  "Sharqia",
-  "Suez",
-  "Aswan",
-  "Assiut",
-  "Beni Suef",
-  "Port Said",
-  "Damietta",
-  "South Sinai",
-  "Kafr ElSheikh",
-  "Matrouh",
-  "Luxor",
-  "Qena",
-  "North Sinai",
-  "Sohag",
-];
+
 
 class TripForm extends StatelessWidget {
   const TripForm({super.key});
@@ -125,8 +98,8 @@ class TripForm extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: _buildTextField(
-                                    label: "Price (EGP)",
-                                    icon: Icons.attach_money,
+                                    label: "Price (£)",
+                                    icon: Icons.currency_pound,
                                     initialValue: state.price,
                                     keyboardType: TextInputType.number,
                                     onChanged: (val) =>
@@ -282,7 +255,7 @@ class TripForm extends StatelessWidget {
               vertical: 16,
             ),
           ),
-          items: egyptCities.map((city) {
+          items: EgyptCities.list.map((city) {
             return DropdownMenuItem(value: city, child: Text(city));
           }).toList(),
           onChanged: (val) => onChanged(val ?? ""),

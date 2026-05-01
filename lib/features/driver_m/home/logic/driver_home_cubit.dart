@@ -17,7 +17,15 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
       // Filter waiting vs completed (Assuming status or date check)
       // For now, let's just put all in waiting if they are in the future
       final now = DateTime.now();
+      final rejected = trips.where((t) {
+        return ['rejected', 'failed', 'canceled'].contains(t.status.toLowerCase());
+      }).toList();
+
       final waiting = trips.where((t) {
+        if (['rejected', 'failed', 'canceled'].contains(t.status.toLowerCase())) return false;
+        final isCompleted = ['accepted', 'success', 'completed'].contains(t.status.toLowerCase());
+        if (isCompleted) return false;
+
         try {
           return DateTime.parse(t.startDate).isAfter(now);
         } catch (_) {
@@ -26,6 +34,10 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
       }).toList();
       
       final completed = trips.where((t) {
+        if (['rejected', 'failed', 'canceled'].contains(t.status.toLowerCase())) return false;
+        final isCompleted = ['accepted', 'success', 'completed'].contains(t.status.toLowerCase());
+        if (isCompleted) return true;
+
         try {
           return DateTime.parse(t.startDate).isBefore(now);
         } catch (_) {
@@ -36,6 +48,7 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
       emit(DriverHomeSuccess(
         waitingTrips: waiting,
         completedTrips: completed,
+        rejectedTrips: rejected,
       ));
     } catch (e) {
       emit(DriverHomeError(e.toString()));

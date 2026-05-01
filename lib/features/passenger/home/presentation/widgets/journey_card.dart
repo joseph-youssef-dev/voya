@@ -19,6 +19,7 @@ class JourneyCard extends StatelessWidget {
   final double duration;
   final int availableSeats;
   final List<dynamic> features;
+  final String details;
   final bool isBookable;
 
   const JourneyCard({
@@ -34,6 +35,7 @@ class JourneyCard extends StatelessWidget {
     required this.duration,
     required this.availableSeats,
     required this.features,
+    required this.details,
     this.isBookable = true,
   });
 
@@ -106,7 +108,7 @@ class JourneyCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  "\$${pricePerSet.toStringAsFixed(0)}",
+                  "£${pricePerSet.toStringAsFixed(0)}",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,
@@ -205,6 +207,19 @@ class JourneyCard extends StatelessWidget {
               _InfoChip(icon: Icons.event_seat_outlined, label: "$availableSeats seats"),
             ],
           ),
+
+          // Details
+          if (details.isNotEmpty) ...[
+            const SizedBox(height: 14),
+            Text(
+              details,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF5A5A5A),
+              ),
+            ),
+          ],
 
           // Features
           if (features.isNotEmpty) ...[
