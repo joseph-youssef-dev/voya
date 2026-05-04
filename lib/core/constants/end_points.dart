@@ -23,7 +23,7 @@ class EndPoints {
 
   /// booking trip
   static const String createBooking = "/Booking/create-booking";
-  static const String updateBooking = "/Booking/update-booking/{id}";
+  static const String cancelBooking = "Booking/cancel-booking/{id}";
   static const String getAllBookings = "/Booking/get-all";
   static const String getBookingById = "/Booking/get-booking/{id}";
 

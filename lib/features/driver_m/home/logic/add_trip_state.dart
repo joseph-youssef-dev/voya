@@ -52,6 +52,7 @@ class AddTripStateData extends AddTripState {
     bool? isLoadingVehicles,
     bool? isPublishing,
     String? errorMessage,
+    bool clearError = false,
   }) {
     return AddTripStateData(
       tripId: tripId ?? this.tripId,
@@ -67,7 +68,7 @@ class AddTripStateData extends AddTripState {
       vehicles: vehicles ?? this.vehicles,
       isLoadingVehicles: isLoadingVehicles ?? this.isLoadingVehicles,
       isPublishing: isPublishing ?? this.isPublishing,
-      errorMessage: errorMessage ?? this.errorMessage,
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
     );
   }
 }

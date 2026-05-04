@@ -40,6 +40,10 @@ class AddTripCubit extends Cubit<AddTripState> {
     }
   }
 
+  void clearError() {
+    emit(data.copyWith(clearError: true));
+  }
+
   void updateField({
     int? tripId,
     String? from,
@@ -62,6 +66,7 @@ class AddTripCubit extends Cubit<AddTripState> {
         notes: notes,
         duration: duration,
         vehicleID: vehicleID,
+        clearError: true,
       ),
     );
   }
@@ -174,6 +179,7 @@ class AddTripCubit extends Cubit<AddTripState> {
         );
       }
       emit(data.copyWith(isPublishing: false));
+      resetForm();
       return true;
     } catch (e) {
       String message = e.toString();

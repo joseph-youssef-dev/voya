@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:voya/core/errors/error_model.dart';
 
@@ -5,6 +6,11 @@ import 'package:voya/core/errors/error_model.dart';
 class ServerException implements Exception {
   final ErrorModel errorModel;
   ServerException(this.errorModel);
+
+  @override
+  String toString() {
+    return errorModel.errorMessage;
+  }
 }
 
 //!CacheExeption
@@ -66,6 +72,11 @@ void handleDioException(DioException e) {
     try {
       if (e.response?.data is Map<String, dynamic>) {
         return ErrorModel.fromJson(e.response!.data);
+      } else if (e.response?.data is String) {
+        final map = jsonDecode(e.response!.data);
+        if (map is Map) {
+          return ErrorModel.fromJson(map);
+        }
       }
     } catch (_) {}
     return ErrorModel(errorMessage: fallback, status: e.response?.statusCode ?? 500);
@@ -83,24 +94,7 @@ void handleDioException(DioException e) {
     case DioExceptionType.sendTimeout:
       throw SendTimeoutException(makeError('Send timeout'));
     case DioExceptionType.badResponse:
-      switch (e.response?.statusCode) {
-        case 400:
-          throw BadResponseException(makeError('Bad request'));
-        case 401:
-          throw UnauthorizedException(makeError('Unauthorized'));
-        case 403:
-          throw ForbiddenException(makeError('Forbidden'));
-        case 404:
-          throw NotFoundException(makeError('Not found'));
-        case 409:
-          throw CofficientException(makeError('Conflict'));
-        case 504:
-          throw BadResponseException(makeError('Gateway timeout'));
-        default:
-          throw BadResponseException(
-            makeError('Server error: ${e.response?.statusCode}'),
-          );
-      }
+      throw BadResponseException(makeError('Server error: ${e.response?.statusCode}'));
     case DioExceptionType.cancel:
       throw CancelException(
         ErrorModel(errorMessage: e.toString(), status: 500),

@@ -35,8 +35,8 @@ class DriverLoginCubit extends Cubit<DriverLoginState> {
         final token = data['token'] ?? data['accessToken'];
         
         if (!isSuccess || statusCode != 200 || token == null) {
-          final errorMessage = response['message'] ?? 'Invalid email or password.';
-          throw ServerException(ErrorModel(errorMessage: errorMessage.toString(), status: statusCode));
+          final errModel = ErrorModel.fromJson(response);
+          throw ServerException(errModel);
         }
       } else {
         throw ServerException(ErrorModel(errorMessage: 'Unexpected server response', status: 500));

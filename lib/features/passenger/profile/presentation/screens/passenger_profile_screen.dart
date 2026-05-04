@@ -20,65 +20,71 @@ class PassengerProfileScreen extends StatelessWidget {
         apiService: ProfileApiService(api: DioConsumer(dio: Dio())),
       )..fetchProfile(),
       child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const CustomHeader(title: 'Profile'),
-              const SizedBox(height: 45),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: BlocConsumer<ProfileCubit, ProfileState>(
-                  // Only rebuild UI on states that affect the displayed data
-                  buildWhen: (prev, curr) =>
-                      curr is ProfileLoading ||
-                      curr is ProfileFailure ||
-                      curr is ProfileSuccess,
-                  listenWhen: (prev, curr) =>
-                      curr is ProfileUpdateSuccess ||
-                      curr is ProfileUpdateFailure,
-                  listener: (context, state) {
-                    // Nothing extra needed here; fetchProfile handles refresh
-                  },
-                  builder: (context, state) {
-                    if (state is ProfileLoading) {
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 60),
-                          child: CircularProgressIndicator(
-                            color: Color(0xFF0D32B3),
-                          ),
-                        ),
-                      );
-                    } else if (state is ProfileFailure) {
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 60),
-                          child: Text(
-                            state.errorMessage,
-                            style: const TextStyle(color: Colors.red),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      );
-                    } else if (state is ProfileSuccess) {
-                      final profile = state.profile;
-                      return Column(
-                        children: [
-                          ProfileHeaderCard(profile: profile),
-                          const SizedBox(height: 20),
-                          PersonalDetailsSection(profile: profile),
-                          const SizedBox(height: 20),
-                          const LogoutButton(),
-                          const SizedBox(height: 20),
-                        ],
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
+        child: Column(
+          children: [
+            const CustomHeader(title: 'Profile'),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 45),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: BlocConsumer<ProfileCubit, ProfileState>(
+                        // Only rebuild UI on states that affect the displayed data
+                        buildWhen: (prev, curr) =>
+                            curr is ProfileLoading ||
+                            curr is ProfileFailure ||
+                            curr is ProfileSuccess,
+                        listenWhen: (prev, curr) =>
+                            curr is ProfileUpdateSuccess ||
+                            curr is ProfileUpdateFailure,
+                        listener: (context, state) {
+                          // Nothing extra needed here; fetchProfile handles refresh
+                        },
+                        builder: (context, state) {
+                          if (state is ProfileLoading) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 60),
+                                child: CircularProgressIndicator(
+                                  color: Color(0xFF0D32B3),
+                                ),
+                              ),
+                            );
+                          } else if (state is ProfileFailure) {
+                            return Center(
+                              child: Padding(
+                                padding: const EdgeInsets.only(top: 60),
+                                child: Text(
+                                  state.errorMessage,
+                                  style: const TextStyle(color: Colors.red),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          } else if (state is ProfileSuccess) {
+                            final profile = state.profile;
+                            return Column(
+                              children: [
+                                ProfileHeaderCard(profile: profile),
+                                const SizedBox(height: 20),
+                                PersonalDetailsSection(profile: profile),
+                                const SizedBox(height: 20),
+                                const LogoutButton(),
+                                const SizedBox(height: 20),
+                              ],
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -58,30 +58,41 @@ class DriverRegisterCubit extends Cubit<DriverRegisterState> {
 
       final response = await apiService.registerDriver(request);
 
-      final message = (response is Map<String, dynamic> &&
-              response.containsKey('message'))
-          ? response['message']
+      if (response is Map<String, dynamic>) {
+        final isSuccess = response['isSuccess'] ?? response['IsSuccess'];
+        if (isSuccess == false) {
+          final errorMsg = (response['message'] ?? response['Message'] ?? 'Registration failed').toString();
+          emit(DriverRegisterFailure(errorMessage: errorMsg));
+          return;
+        }
+      }
+
+      final String message = (response is Map<String, dynamic> &&
+              (response.containsKey('message') || response.containsKey('Message')))
+          ? (response['message'] ?? response['Message']).toString()
           : 'Driver Registration Successful';
 
       if (response is Map<String, dynamic> && response.containsKey('data')) {
         final data = response['data'];
-        if (data['token'] != null) {
-          await CacheHelper().saveData(key: 'token', value: data['token']);
-        }
-        if (data['refreshToken'] != null) {
-          await CacheHelper().saveData(key: 'refreshToken', value: data['refreshToken']);
+        if (data is Map<String, dynamic>) {
+          if (data['token'] != null) {
+            await CacheHelper().saveData(key: 'token', value: data['token'].toString());
+          }
+          if (data['refreshToken'] != null) {
+            await CacheHelper().saveData(key: 'refreshToken', value: data['refreshToken'].toString());
+          }
         }
       } else if (response is Map<String, dynamic>) {
         if (response['token'] != null) {
-          await CacheHelper().saveData(key: 'token', value: response['token']);
+          await CacheHelper().saveData(key: 'token', value: response['token'].toString());
         }
         if (response['refreshToken'] != null) {
-          await CacheHelper().saveData(key: 'refreshToken', value: response['refreshToken']);
+          await CacheHelper().saveData(key: 'refreshToken', value: response['refreshToken'].toString());
         }
       }
       await CacheHelper().saveData(key: 'email', value: email.trim());
 
-      emit(DriverRegisterSuccess(message: message.toString()));
+      emit(DriverRegisterSuccess(message: message));
     } catch (e) {
       emit(DriverRegisterFailure(errorMessage: e.toString()));
     }

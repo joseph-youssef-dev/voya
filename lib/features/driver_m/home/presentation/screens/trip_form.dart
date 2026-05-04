@@ -9,10 +9,25 @@ import '../../logic/add_trip_cubit.dart';
 import '../../logic/add_trip_state.dart';
 import 'package:voya/core/constants/egypt_cities.dart';
 
-
-
-class TripForm extends StatelessWidget {
+class TripForm extends StatefulWidget {
   const TripForm({super.key});
+
+  @override
+  State<TripForm> createState() => _TripFormState();
+}
+
+class _TripFormState extends State<TripForm> {
+  final _priceController = TextEditingController();
+  final _durationController = TextEditingController();
+  final _notesController = TextEditingController();
+
+  @override
+  void dispose() {
+    _priceController.dispose();
+    _durationController.dispose();
+    _notesController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,26 +37,63 @@ class TripForm extends StatelessWidget {
 
         final cubit = context.read<AddTripCubit>();
 
+        // Update controllers only if they are empty and state is not, 
+        // or if we are in Edit mode and controllers don't match state (initial load)
+        if (_priceController.text != state.price && state.price.isNotEmpty && _priceController.text.isEmpty) {
+          _priceController.text = state.price;
+        }
+        if (_durationController.text != state.duration && state.duration.isNotEmpty && _durationController.text.isEmpty) {
+          _durationController.text = state.duration;
+        }
+        if (_notesController.text != state.notes && state.notes.isNotEmpty && _notesController.text.isEmpty) {
+          _notesController.text = state.notes;
+        }
+        
+        // Forced update for Edit mode initial load
+        if (state.tripId != null && _priceController.text.isEmpty && state.price.isNotEmpty) {
+           _priceController.text = state.price;
+        }
+
         return Scaffold(
           backgroundColor: const Color(0xFFF6F8FE),
-          body: BlocListener<AddTripCubit, AddTripState>(
-            listener: (context, state) {
-              if (state is AddTripStateData && state.errorMessage != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(state.errorMessage!),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            },
+          body: MultiBlocListener(
+            listeners: [
+              BlocListener<AddTripCubit, AddTripState>(
+                listener: (context, state) {
+                  if (state is AddTripStateData) {
+                    if (state.errorMessage != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.errorMessage!),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      cubit.clearError();
+                    }
+                    
+                    // Handle reset
+                    if (state.price.isEmpty && _priceController.text.isNotEmpty) {
+                      _priceController.clear();
+                      _durationController.clear();
+                      _notesController.clear();
+                    }
+                  }
+                },
+              ),
+              BlocListener<NavigationCubit, int>(
+                listener: (context, index) {
+                  if (index == 1) {
+                    cubit.fetchVehicles();
+                  }
+                },
+              ),
+            ],
             child: SafeArea(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     CustomHeader(title: state.tripId != null ? 'Edit Trip' : 'Post a Trip'),
                     const SizedBox(height: 30),
-
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Container(
@@ -62,23 +114,19 @@ class TripForm extends StatelessWidget {
                           children: [
                             const SectionTitle("TRIP TIMELINE"),
                             const SizedBox(height: 10),
-
                             _buildDropdown(
                               label: "Starting Point",
                               icon: Icons.my_location,
                               value: state.from,
                               onChanged: (val) => cubit.updateField(from: val),
                             ),
-
                             const SizedBox(height: 20),
-
                             _buildDropdown(
                               label: "Destination",
                               icon: Icons.location_on_outlined,
                               value: state.to,
                               onChanged: (val) => cubit.updateField(to: val),
                             ),
-
                             const Padding(
                               padding: EdgeInsets.symmetric(vertical: 24),
                               child: Divider(
@@ -86,24 +134,19 @@ class TripForm extends StatelessWidget {
                                 thickness: 1.5,
                               ),
                             ),
-
                             const SectionTitle("SCHEDULE & PRICING"),
                             const SizedBox(height: 10),
-
                             ScheduleRow(state: state),
-
                             const SizedBox(height: 20),
-
                             Row(
                               children: [
                                 Expanded(
                                   child: _buildTextField(
-                                    label: "Price (£)",
-                                    icon: Icons.currency_pound,
-                                    initialValue: state.price,
+                                    label: "Price (EGP)",
+                                    icon: Icons.payments_outlined,
+                                    controller: _priceController,
                                     keyboardType: TextInputType.number,
-                                    onChanged: (val) =>
-                                        cubit.updateField(price: val),
+                                    onChanged: (val) => cubit.updateField(price: val),
                                   ),
                                 ),
                                 const SizedBox(width: 15),
@@ -111,20 +154,16 @@ class TripForm extends StatelessWidget {
                                   child: _buildTextField(
                                     label: "Duration",
                                     icon: Icons.timer_outlined,
-                                    initialValue: state.duration,
+                                    controller: _durationController,
                                     hint: "e.g. 2h 30m",
-                                    onChanged: (val) =>
-                                        cubit.updateField(duration: val),
+                                    onChanged: (val) => cubit.updateField(duration: val),
                                   ),
                                 ),
                               ],
                             ),
-
                             const SizedBox(height: 20),
-
                             const SectionTitle("VEHICLE & DETAILS"),
                             const SizedBox(height: 10),
-
                             state.isLoadingVehicles
                                 ? const Center(child: CircularProgressIndicator())
                                 : _buildVehicleDropdown(
@@ -132,23 +171,18 @@ class TripForm extends StatelessWidget {
                                     icon: Icons.directions_car,
                                     value: state.vehicleID,
                                     vehicles: state.vehicles,
-                                    onChanged: (val) =>
-                                        cubit.updateField(vehicleID: val),
+                                    onChanged: (val) => cubit.updateField(vehicleID: val),
                                   ),
-
                             const SizedBox(height: 20),
-
                             _buildTextField(
                               label: "Details",
                               icon: Icons.note_alt_outlined,
-                              initialValue: state.notes,
+                              controller: _notesController,
                               hint: "Extra details about the trip",
                               maxLines: 3,
                               onChanged: (val) => cubit.updateField(notes: val),
                             ),
-
                             const SizedBox(height: 40),
-
                             SizedBox(
                               width: double.infinity,
                               height: 56,
@@ -238,6 +272,7 @@ class TripForm extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
+          key: ValueKey(value),
           initialValue: value.isEmpty ? null : value,
           icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF0D32B3)),
           decoration: InputDecoration(
@@ -285,6 +320,7 @@ class TripForm extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<int>(
+          key: ValueKey(value),
           initialValue: value,
           icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF0D32B3)),
           decoration: InputDecoration(
@@ -317,7 +353,7 @@ class TripForm extends StatelessWidget {
   Widget _buildTextField({
     required String label,
     required IconData icon,
-    required String initialValue,
+    required TextEditingController controller,
     String? hint,
     int maxLines = 1,
     TextInputType keyboardType = TextInputType.text,
@@ -337,7 +373,7 @@ class TripForm extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         TextFormField(
-          initialValue: initialValue,
+          controller: controller,
           maxLines: maxLines,
           keyboardType: keyboardType,
           onChanged: onChanged,

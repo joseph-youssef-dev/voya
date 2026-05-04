@@ -88,7 +88,7 @@ class _PassengerMainScreenState extends State<PassengerMainScreen> {
                   ),
                   GButton(
                     icon: Icons.history_rounded,
-                    text: 'History',
+                    text: 'My Trips',
                   ),
                   GButton(
                     icon: Icons.person_rounded,

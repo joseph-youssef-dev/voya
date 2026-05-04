@@ -61,7 +61,7 @@ class CompletedTripCard extends StatelessWidget {
             ),
           ),
           Text(
-            "£${trip.pricePerSet}",
+            "EGP ${trip.pricePerSet}",
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w900,
@@ -146,7 +146,7 @@ class RejectedTripCard extends StatelessWidget {
             ),
           ),
           Text(
-            "£${trip.pricePerSet}",
+            "EGP ${trip.pricePerSet}",
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w900,
@@ -266,7 +266,7 @@ class WaitingTripCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    "£${trip.pricePerSet}",
+                    "EGP ${trip.pricePerSet}",
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF0D32B3)),
                   ),
                   const Text(

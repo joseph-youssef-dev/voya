@@ -32,15 +32,9 @@ class DriverProfileScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: BlocConsumer<DriverProfileCubit, DriverProfileState>(
                     listener: (context, state) {
-                      if (state is DriverVehicleActionSuccess) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(state.message), backgroundColor: Colors.green),
-                        );
-                      } else if (state is DriverVehicleActionFailure) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
-                        );
-                      }
+                      // DriverProfileScreen handles general profile errors.
+                      // Specific actions (like adding a vehicle or editing profile) 
+                      // are handled in their respective screens.
                     },
                     builder: (context, state) {
                       if (state is DriverProfileLoading || state is DriverVehicleActionLoading) {

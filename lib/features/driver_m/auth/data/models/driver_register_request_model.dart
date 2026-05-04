@@ -57,34 +57,36 @@ class DriverRegisterRequestModel {
   });
 
   Future<Map<String, dynamic>> toFormDataMap() async {
+    String getFileName(File file) => file.path.split(RegExp(r'[/\\]')).last;
+
     final map = <String, dynamic>{
-      'SSN': ssn,
-      'Email': email,
-      'Password': password,
-      'FirstName': firstName,
-      'LastName': lastName,
-      'Phone': phone,
-      'Town': town,
-      'BirthDate': birthDate,
-      'Vehicles[0].Model': vehicle.model,
-      'Vehicles[0].Color': vehicle.color,
-      'Vehicles[0].VehicleLicense': vehicle.vehicleLicense,
-      'Vehicles[0].NumberOfPassangers': vehicle.numberOfPassengers,
-      'DriverLicense.LicenseNumber': driverLicense.licenseNumber,
-      'DriverLicense.ExpiryDate': driverLicense.expiryDate,
+      'SSN': ssn.trim(),
+      'Email': email.trim(),
+      'Password': password.trim(),
+      'FirstName': firstName.trim(),
+      'LastName': lastName.trim(),
+      'Phone': phone.trim(),
+      'Town': town.trim(),
+      'BirthDate': birthDate.trim(),
+      'Vehicles[0].Model': vehicle.model.trim(),
+      'Vehicles[0].Color': vehicle.color.trim(),
+      'Vehicles[0].VehicleLicense': vehicle.vehicleLicense.trim(),
+      'Vehicles[0].NumberOfPassangers': vehicle.numberOfPassengers.toString(),
+      'DriverLicense.LicenseNumber': driverLicense.licenseNumber.trim(),
+      'DriverLicense.ExpiryDate': driverLicense.expiryDate.trim(),
     };
 
     if (profileImage != null) {
-      map['profileImage'] = await MultipartFile.fromFile(
+      map['ProfileImage'] = await MultipartFile.fromFile(
         profileImage!.path,
-        filename: profileImage!.path.split('/').last,
+        filename: getFileName(profileImage!),
       );
     }
 
     if (driverLicense.licenseImage != null) {
       map['DriverLicense.LicenseImage'] = await MultipartFile.fromFile(
         driverLicense.licenseImage!.path,
-        filename: driverLicense.licenseImage!.path.split('/').last,
+        filename: getFileName(driverLicense.licenseImage!),
       );
     }
 
@@ -95,7 +97,7 @@ class DriverRegisterRequestModel {
         multipartImages.add(
           await MultipartFile.fromFile(
             file.path,
-            filename: file.path.split('/').last,
+            filename: getFileName(file),
           ),
         );
       }

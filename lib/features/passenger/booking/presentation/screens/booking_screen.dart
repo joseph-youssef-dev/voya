@@ -69,7 +69,7 @@ class BookingScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
-                              "£$pricePerSeat/seat",
+                              "EGP $pricePerSeat/seat",
                               style: const TextStyle(
                                 color: Color(0xFF0D32B3),
                                 fontSize: 12,
@@ -203,7 +203,7 @@ class BookingScreen extends StatelessWidget {
                               total = state.totalPrice;
                             }
                             return Text(
-                              "£${total.toStringAsFixed(2)}",
+                              "EGP ${total.toStringAsFixed(2)}",
                               style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w900,

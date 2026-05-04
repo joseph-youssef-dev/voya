@@ -108,7 +108,7 @@ class JourneyCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
-                  "£${pricePerSet.toStringAsFixed(0)}",
+                  "EGP ${pricePerSet.toStringAsFixed(0)}",
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w900,

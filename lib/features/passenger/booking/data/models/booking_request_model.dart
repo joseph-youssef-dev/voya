@@ -17,7 +17,10 @@ class BookingRequestModel {
       'TripID': tripId,
       'NumberOfSeats': numberOfSeats,
       if (receiptImage != null)
-        'PaymentImage': await MultipartFile.fromFile(receiptImage!.path),
+        'PaymentImage': await MultipartFile.fromFile(
+          receiptImage!.path,
+          filename: receiptImage!.path.split('/').last,
+        ),
     };
   }
 }
