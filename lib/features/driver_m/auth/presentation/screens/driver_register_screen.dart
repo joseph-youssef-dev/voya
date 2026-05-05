@@ -373,12 +373,12 @@ class _DriverRegisterScreenState extends State<DriverRegisterScreen> {
                               );
                               Navigator.pushReplacement(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => OtpScreen(
-                                    email: _emailController.text.trim(),
-                                    nextScreen: const DriverLoginScreen(),
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpScreen(
+                                      email: _emailController.text.trim(),
+                                      nextScreen: const DriverLoginScreen(),
+                                    ),
                                   ),
-                                ),
                               );
                             } else if (state is DriverRegisterFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(

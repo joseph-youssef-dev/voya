@@ -91,6 +91,7 @@ class DriverRegisterCubit extends Cubit<DriverRegisterState> {
         }
       }
       await CacheHelper().saveData(key: 'email', value: email.trim());
+      await CacheHelper().saveData(key: 'userRole', value: 'driver');
 
       emit(DriverRegisterSuccess(message: message));
     } catch (e) {

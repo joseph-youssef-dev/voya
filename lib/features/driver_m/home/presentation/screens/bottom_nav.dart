@@ -8,6 +8,7 @@ import 'package:voya/features/driver_m/home/logic/driver_home_cubit.dart';
 import 'package:voya/features/driver_m/home/presentation/screens/addtrip.dart';
 import 'package:voya/features/driver_m/home/presentation/screens/add_new_trip.dart';
 import 'package:voya/features/driver_m/profile_driver/presentation/screens/profile_main.dart';
+import 'package:voya/features/driver_m/home/presentation/screens/driver_my_trips_screen.dart';
 
 import 'package:voya/features/driver_m/home/logic/navigation_cubit.dart';
 
@@ -21,6 +22,7 @@ class CustomBottomNavBar extends StatefulWidget {
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   final List<Widget> pages = const [
     CreateTrip(),
+    DriverMyTripsScreen(),
     AddNewTripPage(),
     DriverProfileScreen(),
   ];
@@ -72,6 +74,10 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
                       GButton(
                         icon: Icons.dashboard_rounded,
                         text: 'Home',
+                      ),
+                      GButton(
+                        icon: Icons.route_rounded,
+                        text: 'My Journeys',
                       ),
                       GButton(
                         icon: Icons.add_box_rounded,

@@ -12,18 +12,21 @@ class BookingScreen extends StatelessWidget {
   final String fromCity;
   final String toCity;
 
+  final int availableSeats;
+
   const BookingScreen({
     super.key,
     required this.tripId,
     required this.pricePerSeat,
     required this.fromCity,
     required this.toCity,
+    required this.availableSeats,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: context.read<BookingCubit>()..init(pricePerSeat),
+      value: context.read<BookingCubit>()..init(pricePerSeat, availableSeats),
       child: Scaffold(
         backgroundColor: const Color(0xFFF6F8FE),
         body: SafeArea(
@@ -139,6 +142,7 @@ class BookingScreen extends StatelessWidget {
                             children: [
                               _buildCounterButton(
                                 icon: Icons.remove,
+                                isEnabled: seats > 1,
                                 onTap: () => context
                                     .read<BookingCubit>()
                                     .updateSeats(seats - 1),
@@ -158,6 +162,7 @@ class BookingScreen extends StatelessWidget {
                               ),
                               _buildCounterButton(
                                 icon: Icons.add,
+                                isEnabled: seats < availableSeats,
                                 onTap: () => context
                                     .read<BookingCubit>()
                                     .updateSeats(seats + 1),
@@ -275,16 +280,21 @@ class BookingScreen extends StatelessWidget {
   Widget _buildCounterButton({
     required IconData icon,
     required VoidCallback onTap,
+    required bool isEnabled,
   }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isEnabled ? onTap : null,
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: const Color(0xFFF1F4F9),
+          color: isEnabled ? const Color(0xFFF1F4F9) : const Color(0xFFF8FAFD),
           borderRadius: BorderRadius.circular(15),
         ),
-        child: Icon(icon, color: const Color(0xFF0D32B3), size: 24),
+        child: Icon(
+          icon,
+          color: isEnabled ? const Color(0xFF0D32B3) : const Color(0xFFAAB8D2),
+          size: 24,
+        ),
       ),
     );
   }

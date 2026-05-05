@@ -7,12 +7,14 @@ class DriverHomeInitial extends DriverHomeState {}
 class DriverHomeLoading extends DriverHomeState {}
 
 class DriverHomeSuccess extends DriverHomeState {
-  final List<TripModel> waitingTrips;
+  final List<TripModel> pendingTrips;
+  final List<TripModel> openTrips;
   final List<TripModel> completedTrips;
   final List<TripModel> rejectedTrips;
 
   DriverHomeSuccess({
-    required this.waitingTrips,
+    required this.pendingTrips,
+    required this.openTrips,
     required this.completedTrips,
     required this.rejectedTrips,
   });

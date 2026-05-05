@@ -8,7 +8,7 @@ class SharedAuthApiService {
 
   Future<dynamic> verifyOtp({required String email, required String otp}) async {
     final response = await api.post(
-      EndPoints.verfiyAccount,
+      EndPoints.verifyEmail,
       data: {
         'email': email,
         'otpCode': otp,
@@ -20,7 +20,7 @@ class SharedAuthApiService {
   Future<dynamic> forgetPassword({required String email}) async {
     final response = await api.post(
       EndPoints.forgetPassword,
-      data: email,
+      data: {'email': email},
     );
     return response;
   }
@@ -39,6 +39,14 @@ class SharedAuthApiService {
         'otpCode': otp,
         'newPassword': newPassword,
       },
+    );
+    return response;
+  }
+
+  Future<dynamic> resendOtp({required String email}) async {
+    final response = await api.post(
+      EndPoints.resendOtp,
+      data: {'email': email},
     );
     return response;
   }

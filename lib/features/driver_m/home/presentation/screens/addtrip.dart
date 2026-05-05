@@ -19,7 +19,7 @@ class CreateTrip extends StatelessWidget {
           builder: (context, state) {
             return Column(
               children: [
-                const CustomHeader(title: 'Driver Hub'),
+                const CustomHeader(title: 'Driver Home'),
                 const SizedBox(height: 30),
 
                 Padding(
@@ -61,9 +61,9 @@ class CreateTrip extends StatelessWidget {
                           vertical: 10,
                         ),
                         children: [
-                          if (state.waitingTrips.isNotEmpty) ...[
-                            const _SectionTitle(title: "Waiting Trips"),
-                            ...state.waitingTrips.map(
+                          if (state.pendingTrips.isNotEmpty) ...[
+                            const _SectionTitle(title: "Pending Admin Approval"),
+                            ...state.pendingTrips.map(
                               (trip) => WaitingTripCard(
                                 trip: trip,
                                 onEdit: () {
@@ -95,24 +95,16 @@ class CreateTrip extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 25),
-                          ],
-                          if (state.completedTrips.isNotEmpty) ...[
-                            const _SectionTitle(title: "Completed History"),
-                            ...state.completedTrips.map(
-                              (trip) => CompletedTripCard(trip: trip),
+                          ] else
+                            const Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 100),
+                                child: Text(
+                                  "No pending trips found",
+                                  style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
-                            const SizedBox(height: 25),
-                          ],
-                          if (state.rejectedTrips.isNotEmpty) ...[
-                            const _SectionTitle(title: "Rejected Trips"),
-                            ...state.rejectedTrips.map(
-                              (trip) => RejectedTripCard(trip: trip),
-                            ),
-                          ],
-                          if (state.waitingTrips.isEmpty &&
-                              state.completedTrips.isEmpty &&
-                              state.rejectedTrips.isEmpty)
-                            const Center(child: Text("No trips found")),
                           const SizedBox(height: 20),
                         ],
                       ),

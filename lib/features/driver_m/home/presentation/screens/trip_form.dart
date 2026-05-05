@@ -211,7 +211,7 @@ class _TripFormState extends State<TripForm> {
                                             ),
                                           );
                                           context.read<DriverHomeCubit>().fetchTrips();
-                                          if (Navigator.canPop(context)) {
+                                          if (state.tripId != null && Navigator.canPop(context)) {
                                             Navigator.pop(context);
                                           } else {
                                             cubit.resetForm();

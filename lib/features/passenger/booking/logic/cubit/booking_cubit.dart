@@ -9,15 +9,17 @@ class BookingCubit extends Cubit<BookingState> {
   BookingCubit({required this.apiService}) : super(BookingInitial());
 
   int _currentSeats = 1;
+  int _maxSeats = 1;
   double _pricePerSeat = 0;
 
-  void init(double pricePerSeat) {
+  void init(double pricePerSeat, int maxSeats) {
     _pricePerSeat = pricePerSeat;
+    _maxSeats = maxSeats;
     emit(BookingSeatsChanged(seats: _currentSeats, totalPrice: _currentSeats * _pricePerSeat));
   }
 
   void updateSeats(int seats) {
-    if (seats < 1) return;
+    if (seats < 1 || seats > _maxSeats) return;
     _currentSeats = seats;
     emit(BookingSeatsChanged(seats: _currentSeats, totalPrice: _currentSeats * _pricePerSeat));
   }

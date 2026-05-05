@@ -14,39 +14,24 @@ class DriverHomeCubit extends Cubit<DriverHomeState> {
       final tripsData = await apiService.getDriverTrips();
       final trips = tripsData.map((e) => TripModel.fromJson(e)).toList();
       
-      // Filter waiting vs completed (Assuming status or date check)
-      // For now, let's just put all in waiting if they are in the future
-      final now = DateTime.now();
+      final completed = trips.where((t) => t.availableSeats == 0).toList();
+
+      final pending = trips.where((t) {
+        return t.availableSeats > 0 && t.status.toLowerCase() == 'waiting';
+      }).toList();
+
+      final open = trips.where((t) {
+        return t.availableSeats > 0 && t.status.toLowerCase() == 'accepted';
+      }).toList();
+
       final rejected = trips.where((t) {
-        return ['rejected', 'failed', 'canceled'].contains(t.status.toLowerCase());
-      }).toList();
-
-      final waiting = trips.where((t) {
-        if (['rejected', 'failed', 'canceled'].contains(t.status.toLowerCase())) return false;
-        final isCompleted = ['accepted', 'success', 'completed'].contains(t.status.toLowerCase());
-        if (isCompleted) return false;
-
-        try {
-          return DateTime.parse(t.startDate).isAfter(now);
-        } catch (_) {
-          return true; // Default to waiting if date parse fails
-        }
-      }).toList();
-      
-      final completed = trips.where((t) {
-        if (['rejected', 'failed', 'canceled'].contains(t.status.toLowerCase())) return false;
-        final isCompleted = ['accepted', 'success', 'completed'].contains(t.status.toLowerCase());
-        if (isCompleted) return true;
-
-        try {
-          return DateTime.parse(t.startDate).isBefore(now);
-        } catch (_) {
-          return false;
-        }
+        return t.availableSeats > 0 && 
+               ['rejected', 'failed', 'canceled'].contains(t.status.toLowerCase());
       }).toList();
 
       emit(DriverHomeSuccess(
-        waitingTrips: waiting,
+        pendingTrips: pending,
+        openTrips: open,
         completedTrips: completed,
         rejectedTrips: rejected,
       ));

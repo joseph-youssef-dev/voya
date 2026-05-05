@@ -175,8 +175,10 @@ class _MyTripCard extends StatelessWidget {
     String formattedDate = "";
     try {
       final date = DateTime.parse(trip.startDate);
+      final hour = date.hour % 12 == 0 ? 12 : date.hour % 12;
+      final period = date.hour >= 12 ? "PM" : "AM";
       formattedTime =
-          "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+          "$hour:${date.minute.toString().padLeft(2, '0')} $period";
       formattedDate = "${date.day}/${date.month}/${date.year}";
     } catch (_) {}
 

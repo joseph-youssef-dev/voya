@@ -128,11 +128,12 @@ class _DriverLoginScreenState extends State<DriverLoginScreen> {
                                   backgroundColor: Colors.green,
                                 ),
                               );
-                              Navigator.pushReplacement(
+                              Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const CustomBottomNavBar(),
                                 ),
+                                (route) => false,
                               );
                             } else if (state is DriverLoginFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(

@@ -5,7 +5,8 @@ class EndPoints {
   static const String registerPassenger = "/Auth/register-passenger";
   static const String registerDriver = "/Auth/register-driver";
 
-  static const String verfiyAccount = "/Auth/verify-email-otp";
+  static const String verifyEmail = "/Auth/verify-email-otp";
+  static const String resendOtp = "/Auth/resend-email-otp";
   static const String forgetPassword = "/Auth/forget-password";
   static const String resetPassword = "/Auth/reset-password";
   static const String refreshToken = "/Auth/refresh-token";

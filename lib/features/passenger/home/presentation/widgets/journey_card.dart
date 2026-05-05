@@ -6,6 +6,7 @@ import 'package:voya/features/passenger/booking/presentation/screens/booking_scr
 import 'package:voya/features/passenger/booking/logic/cubit/booking_cubit.dart';
 import 'package:voya/features/passenger/booking/data/api/booking_api_service.dart';
 import 'package:voya/features/passenger/history/logic/cubit/history_cubit.dart';
+import 'package:voya/features/passenger/home/logic/cubit/home_cubit.dart';
 
 class JourneyCard extends StatelessWidget {
   final int tripId;
@@ -45,8 +46,9 @@ class JourneyCard extends StatelessWidget {
     String formattedDate = "";
     try {
       final date = DateTime.parse(startDate);
-      formattedTime =
-          "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+      final hour = date.hour % 12 == 0 ? 12 : date.hour % 12;
+      final period = date.hour >= 12 ? "PM" : "AM";
+      formattedTime = "$hour:${date.minute.toString().padLeft(2, '0')} $period";
       formattedDate = "${date.day}/${date.month}/${date.year}";
     } catch (_) {}
 
@@ -74,7 +76,11 @@ class JourneyCard extends StatelessWidget {
               CircleAvatar(
                 radius: 22,
                 backgroundColor: const Color(0xFFEBF1FF),
-                child: const Icon(Icons.person, color: Color(0xFF0D32B3), size: 22),
+                child: const Icon(
+                  Icons.person,
+                  color: Color(0xFF0D32B3),
+                  size: 22,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -102,7 +108,10 @@ class JourneyCard extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFEBF1FF),
                   borderRadius: BorderRadius.circular(12),
@@ -133,10 +142,17 @@ class JourneyCard extends StatelessWidget {
                     height: 10,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: const Color(0xFF0D32B3), width: 2.5),
+                      border: Border.all(
+                        color: const Color(0xFF0D32B3),
+                        width: 2.5,
+                      ),
                     ),
                   ),
-                  Container(width: 2, height: 36, color: const Color(0xFFF0F0F0)),
+                  Container(
+                    width: 2,
+                    height: 36,
+                    color: const Color(0xFFF0F0F0),
+                  ),
                   Container(
                     width: 10,
                     height: 10,
@@ -200,11 +216,20 @@ class JourneyCard extends StatelessWidget {
           // Stats Row
           Row(
             children: [
-              _InfoChip(icon: Icons.access_time, label: "$formattedTime · $formattedDate"),
+              _InfoChip(
+                icon: Icons.access_time,
+                label: "$formattedTime · $formattedDate",
+              ),
               const SizedBox(width: 10),
-              _InfoChip(icon: Icons.map_outlined, label: "${distance.toStringAsFixed(0)} km"),
+              _InfoChip(
+                icon: Icons.map_outlined,
+                label: "${distance.toStringAsFixed(0)} km",
+              ),
               const SizedBox(width: 10),
-              _InfoChip(icon: Icons.event_seat_outlined, label: "$availableSeats seats"),
+              _InfoChip(
+                icon: Icons.event_seat_outlined,
+                label: "$availableSeats seats",
+              ),
             ],
           ),
 
@@ -241,7 +266,10 @@ class JourneyCard extends StatelessWidget {
               runSpacing: 6,
               children: features.map((f) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFEBF1FF),
                     borderRadius: BorderRadius.circular(8),
@@ -274,7 +302,9 @@ class JourneyCard extends StatelessWidget {
                             providers: [
                               BlocProvider(
                                 create: (context) => BookingCubit(
-                                  apiService: BookingApiService(api: DioConsumer(dio: Dio())),
+                                  apiService: BookingApiService(
+                                    api: DioConsumer(dio: Dio()),
+                                  ),
                                 ),
                               ),
                               BlocProvider.value(value: historyCubit),
@@ -284,18 +314,26 @@ class JourneyCard extends StatelessWidget {
                               pricePerSeat: pricePerSet,
                               fromCity: fromCity,
                               toCity: toCity,
+                              availableSeats: availableSeats,
                             ),
                           ),
                         ),
-                      );
+                      ).then((_) {
+                        if (context.mounted) {
+                          try {
+                            context.read<HomeCubit>().fetchAllTrips();
+                          } catch (_) {}
+                        }
+                      });
                     }
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: isBookable
                     ? const Color(0xFF0D32B3)
                     : const Color(0xFFD6DFF7),
-                foregroundColor:
-                    isBookable ? Colors.white : const Color(0xFF0D32B3),
+                foregroundColor: isBookable
+                    ? Colors.white
+                    : const Color(0xFF0D32B3),
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),

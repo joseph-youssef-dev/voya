@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +20,38 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final _otpController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  
+  Timer? _timer;
+  int _start = 60;
+  bool _canResend = false;
+
+  void startTimer() {
+    _canResend = false;
+    _start = 60;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_start == 0) {
+        setState(() {
+          _canResend = true;
+          timer.cancel();
+        });
+      } else {
+        setState(() {
+          _start--;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
 
   @override
   void dispose() {
+    _timer?.cancel();
     _otpController.dispose();
     super.dispose();
   }
@@ -83,6 +113,13 @@ class _OtpScreenState extends State<OtpScreen> {
                         
                         TextFormField(
                           controller: _otpController,
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 8,
+                          ),
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return "Please enter OTP";
@@ -90,19 +127,21 @@ class _OtpScreenState extends State<OtpScreen> {
                             return null;
                           },
                           decoration: InputDecoration(
-                            labelText: "OTP",
+                            labelText: "OTP CODE",
                             labelStyle: const TextStyle(
                               color: Color(0xFF5A6B87),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1.0,
                             ),
-                            prefixIcon: const Icon(Icons.security, color: Color(0xFF5A6B87), size: 20),
+                            prefixIcon: const Icon(Icons.security, color: Color(0xFF0D32B3), size: 20),
                             filled: true,
-                            fillColor: const Color(0xFFF6F8FE),
+                            fillColor: const Color(0xFFF1F4F9),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                               borderSide: BorderSide.none,
                             ),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 20),
                           ),
                         ),
                         const SizedBox(height: 30),
@@ -113,10 +152,12 @@ class _OtpScreenState extends State<OtpScreen> {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(state.message), backgroundColor: Colors.green),
                               );
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (context) => widget.nextScreen),
-                              );
+                              if (state is SharedAuthVerifySuccess) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => widget.nextScreen),
+                                );
+                              }
                             } else if (state is SharedAuthFailure) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(state.errorMessage), backgroundColor: Colors.red),
@@ -124,36 +165,65 @@ class _OtpScreenState extends State<OtpScreen> {
                             }
                           },
                           builder: (context, state) {
-                            return ElevatedButton(
-                              onPressed: state is SharedAuthLoading
-                                  ? null
-                                  : () {
-                                      if (_formKey.currentState!.validate()) {
-                                        context.read<SharedAuthCubit>().verifyOtp(
-                                          email: widget.email,
-                                          otp: _otpController.text.trim(),
-                                        );
-                                      }
-                                    },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF0D32B3),
-                                foregroundColor: Colors.white,
-                                minimumSize: const Size(double.infinity, 56),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                elevation: 0,
-                              ),
-                              child: state is SharedAuthLoading
-                                  ? const SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-                                    )
-                                  : const Text(
-                                      "Verify OTP",
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                            return Column(
+                              children: [
+                                ElevatedButton(
+                                  onPressed: state is SharedAuthLoading
+                                      ? null
+                                      : () {
+                                          if (_formKey.currentState!.validate()) {
+                                            context.read<SharedAuthCubit>().verifyOtp(
+                                              email: widget.email,
+                                              otp: _otpController.text.trim(),
+                                            );
+                                          }
+                                        },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF0D32B3),
+                                    foregroundColor: Colors.white,
+                                    minimumSize: const Size(double.infinity, 56),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
+                                    elevation: 0,
+                                  ),
+                                  child: state is SharedAuthLoading
+                                      ? const SizedBox(
+                                          height: 24,
+                                          width: 24,
+                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                                        )
+                                      : const Text(
+                                          "Verify OTP",
+                                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
+                                        ),
+                                ),
+                                const SizedBox(height: 20),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Didn't receive code? ",
+                                      style: TextStyle(color: Color(0xFF5A6B87), fontSize: 14),
+                                    ),
+                                    TextButton(
+                                      onPressed: _canResend && state is! SharedAuthLoading
+                                          ? () {
+                                              context.read<SharedAuthCubit>().resendOtp(email: widget.email);
+                                              startTimer();
+                                            }
+                                          : null,
+                                      child: Text(
+                                        _canResend ? "Resend" : "Resend in ${_start}s",
+                                        style: TextStyle(
+                                          color: _canResend ? const Color(0xFF0D32B3) : Colors.grey,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             );
                           },
                         ),

@@ -126,11 +126,12 @@ class _PassengerLoginScreenState extends State<PassengerLoginScreen> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(state.message), backgroundColor: Colors.green),
                             );
-                            Navigator.pushReplacement(
+                            Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const PassengerMainScreen(),
                               ),
+                              (route) => false,
                             );
                           } else if (state is LoginFailure) {
                             ScaffoldMessenger.of(context).showSnackBar(

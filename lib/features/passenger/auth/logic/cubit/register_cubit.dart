@@ -68,6 +68,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         }
       }
       await CacheHelper().saveData(key: 'email', value: email.trim());
+      await CacheHelper().saveData(key: 'userRole', value: 'passenger');
 
       emit(RegisterSuccess(message: message));
       
