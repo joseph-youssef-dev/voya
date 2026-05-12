@@ -16,12 +16,12 @@ class HomeApiService {
       EndPoints.getAllTrips,
       queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
     );
-    
+
     if (response is Map<String, dynamic> && response.containsKey('data')) {
       final List dataList = response['data'] as List;
       return dataList.map((tripMap) => TripModel.fromJson(tripMap)).toList();
     }
-    
+
     return [];
   }
 }

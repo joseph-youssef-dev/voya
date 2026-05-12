@@ -1,5 +1,3 @@
-// جوزيف
-
 import 'package:flutter/material.dart';
 import 'package:voya/core/enums/role_enum.dart';
 
@@ -25,7 +23,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 24),
 
               // Header
               const Text(
@@ -43,7 +41,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                 textAlign: TextAlign.center,
                 text: const TextSpan(
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 26,
                     fontWeight: FontWeight.w900,
                     height: 1.2,
                   ),
@@ -66,41 +64,41 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFF5A6B87),
-                  fontSize: 16,
+                  fontSize: 14,
                   height: 1.5,
                   fontWeight: FontWeight.w500,
                 ),
               ),
 
-              const SizedBox(height: 40),
-
-              // Cards
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      _buildRoleCard(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: _buildRoleCard(
                         role: UserRole.driver,
                         icon: Icons.drive_eta,
                         title: "I am a Driver",
                         description:
                             "Join our fleet of professional architects of movement. Set your schedule and earn on your terms.",
                       ),
-                      const SizedBox(height: 20),
-                      _buildRoleCard(
+                    ),
+                    const SizedBox(height: 12),
+                    Flexible(
+                      child: _buildRoleCard(
                         role: UserRole.passenger,
                         icon: Icons.location_on,
                         title: "I am a Passenger",
                         description:
                             "Experience premium transportation tailored to your needs. Fast, reliable, and exceptionally smooth.",
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
 
               // Bottom Section
-              const SizedBox(height: 20),
+              const SizedBox(height: 12),
               ElevatedButton(
                 onPressed: () {
                   if (selectedRole != null) {
@@ -137,7 +135,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 50),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -161,7 +159,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
@@ -178,42 +176,43 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
           ],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 color: Color(0xFFEBF1FF),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: const Color(0xFF0D32B3), size: 28),
+              child: Icon(icon, color: const Color(0xFF0D32B3), size: 24),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 8),
             Text(
               title,
               style: const TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E2432),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Text(
               description,
               style: const TextStyle(
-                fontSize: 14,
+                fontSize: 13,
                 color: Color(0xFF5A6B87),
                 height: 1.5,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             Row(
               children: [
                 Text(
                   "Select this role",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: FontWeight.bold,
                     color: isSelected
                         ? const Color(0xFF0D32B3)
@@ -236,8 +235,6 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     );
   }
 }
-
-// مارينا
 
 // import 'package:flutter/material.dart';
 // import 'package:voya/core/enums/role_enum.dart';

@@ -275,6 +275,7 @@ class _PassengerSearchScreenState extends State<PassengerSearchScreen> {
                         features: trip.features,
                         details: trip.details,
                         isBookable: trip.availableSeats > 0,
+                        driverImage: '',
                       );
                     },
                   );

@@ -13,6 +13,7 @@ class TripModel {
   final List<dynamic> features;
   final String status;
 
+  final String driverImage;
   final int vechileId;
 
   TripModel({
@@ -24,6 +25,7 @@ class TripModel {
     required this.startDate,
     required this.pricePerSet,
     required this.driverName,
+    required this.driverImage,
     required this.vehicleModel,
     required this.distance,
     required this.availableSeats,
@@ -42,6 +44,7 @@ class TripModel {
       startDate: json['startDate'] ?? json['StartDate'] ?? '',
       pricePerSet: (json['pricePerSet'] ?? json['PricePerSet'] ?? 0.0).toDouble(),
       driverName: json['driverName'] ?? json['DriverName'] ?? '',
+      driverImage: json['driverImage'] ?? json['DriverImage'] ?? '',
       vehicleModel: json['vehicleModel'] ?? json['VehicleModel'] ?? '',
       distance: (json['distance'] ?? json['Distance'] ?? 0.0).toDouble(),
       availableSeats: json['availableSeats'] ?? json['AvailableSeats'] ?? json['numberOfPassangers'] ?? 0,

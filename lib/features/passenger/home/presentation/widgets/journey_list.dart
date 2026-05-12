@@ -43,6 +43,7 @@ class JourneyList extends StatelessWidget {
               return JourneyCard(
                 tripId: trip.id,
                 driverName: trip.driverName,
+                driverImage: trip.driverImage,
                 fromCity: trip.fromCity,
                 toCity: trip.toCity,
                 startDate: trip.startDate,

@@ -11,6 +11,7 @@ import 'package:voya/features/passenger/home/logic/cubit/home_cubit.dart';
 class JourneyCard extends StatelessWidget {
   final int tripId;
   final String driverName;
+  final String driverImage;
   final String fromCity;
   final String toCity;
   final String startDate;
@@ -27,6 +28,7 @@ class JourneyCard extends StatelessWidget {
     super.key,
     required this.tripId,
     required this.driverName,
+    required this.driverImage,
     required this.fromCity,
     required this.toCity,
     required this.startDate,
@@ -76,11 +78,14 @@ class JourneyCard extends StatelessWidget {
               CircleAvatar(
                 radius: 22,
                 backgroundColor: const Color(0xFFEBF1FF),
-                child: const Icon(
-                  Icons.person,
-                  color: Color(0xFF0D32B3),
-                  size: 22,
-                ),
+                backgroundImage: driverImage.isNotEmpty ? NetworkImage(driverImage) : null,
+                child: driverImage.isEmpty
+                    ? const Icon(
+                        Icons.person,
+                        color: Color(0xFF0D32B3),
+                        size: 22,
+                      )
+                    : null,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -214,18 +219,18 @@ class JourneyCard extends StatelessWidget {
           const SizedBox(height: 14),
 
           // Stats Row
-          Row(
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
             children: [
               _InfoChip(
                 icon: Icons.access_time,
                 label: "$formattedTime · $formattedDate",
               ),
-              const SizedBox(width: 10),
               _InfoChip(
                 icon: Icons.map_outlined,
                 label: "${distance.toStringAsFixed(0)} km",
               ),
-              const SizedBox(width: 10),
               _InfoChip(
                 icon: Icons.event_seat_outlined,
                 label: "$availableSeats seats",
